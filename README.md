@@ -270,16 +270,35 @@ This kit is developer tooling that lives **alongside** your app code, not part o
 - `docs/FEATURES.md` — mirror of GitHub Issues. Regenerate with `sync-features-from-issues.sh`.
 - `docs/features.json` — machine-readable feature snapshot. Regenerated alongside FEATURES.md.
 
-### Architecture docs: stable vs point-in-time
+### Document flow
 
-Keep them **separate**:
+Docs build on each other in a chain:
 
-| Doc | Role | Analogy | When to update |
-|-----|------|---------|----------------|
-| `architecture.md` | The blueprint — how the system IS designed | Building blueprint | Only when architecture actually changes |
-| `architecture-review.md` | The inspection report — what's wrong + fix plan | Inspector's report | Regenerated after major audits or before big refactors |
+```
+architecture.md  ← human-written: the blueprint
+       +
+<project>-map.md  ← human-written: module specs + status
+       ↓
+   (Claude reads both)
+       ↓
+architecture-review.md  ← Claude-generated: analysis + PR plan
+       ↓
+   (fix plan becomes GitHub Issues)
+       ↓
+FEATURES.md + features.json  ← mirror of GitHub Issues
+```
 
-If you only have one architecture doc, use `architecture.md`. Create `architecture-review.md` only when you need a PR-oriented fix plan or an Opus-level architecture re-assessment.
+| Doc | Source | When to update |
+|-----|--------|----------------|
+| `architecture.md` | You write it | Only when architecture actually changes |
+| `<project>-map.md` | You write it (use `/spec`) | Every time you add/change a module |
+| `architecture-review.md` | **Claude generates it** from the two above | Regenerate after audits or big refactors — in a fresh session for clean context |
+| GitHub Issues | Created from review's fix plan | Continuous — filed as work items |
+| `FEATURES.md` + `features.json` | Auto-generated from GitHub Issues | `bash scripts/sync-features-from-issues.sh` |
+
+**The rule:** upstream changes invalidate downstream docs. If you change `architecture.md` or the map, regenerate `architecture-review.md`. If the review's fix plan changes, update the issues.
+
+If you only have one architecture doc, use `architecture.md`. `architecture-review.md` is optional — only create it when you want Claude's analysis + PR plan for a big refactor.
 
 **Work tracking:**
 - **GitHub Issues** are the source of truth for backlog/bugs/features
