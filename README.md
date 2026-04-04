@@ -6,6 +6,15 @@ A reusable multi-agent setup for Claude Code. Drop this into any repo and you ge
 
 ## Install into a new repo
 
+From GitHub (no local clone needed):
+
+```bash
+cd /path/to/your-project
+curl -s https://raw.githubusercontent.com/spencerlockework-boop/claude-starter-kit/main/scripts/init-from-github.sh | bash
+```
+
+Or from a local clone:
+
 ```bash
 bash /path/to/claude-starter-kit/scripts/init-claude-system.sh
 ```
@@ -14,11 +23,20 @@ Then edit `CLAUDE.md` with your project's stack and architecture.
 
 ## Sync updates into an existing repo
 
+From GitHub (always gets latest):
+
+```bash
+cd /path/to/your-project
+curl -s https://raw.githubusercontent.com/spencerlockework-boop/claude-starter-kit/main/scripts/sync-from-github.sh | bash
+```
+
+Or from a local clone:
+
 ```bash
 bash /path/to/claude-starter-kit/scripts/sync-from-kit.sh
 ```
 
-Only updates universal files (agents, universal commands, skills, settings, scripts, docs). Never touches your project-specific files (CLAUDE.md, custom commands).
+Sync updates universal files only (agents, universal commands, skills, settings, scripts, docs). Never touches your project-specific files (CLAUDE.md, custom commands).
 
 ---
 
