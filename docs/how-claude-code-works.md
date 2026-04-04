@@ -192,7 +192,7 @@ Terminal 3: claude --worktree temporal-setup
 This triggers massive exploration (10+ file reads into context) before any work starts.
 
 ### Efficient
-> "Build the upload metadata form. It's a modal in tracker-table.tsx that opens after file selection. Needs: auto-generated HANF0001 codes, editable name/vendor/type/source fields, bulk edit bar, CSV export button. API endpoint for next-code already exists at GET /assets/next-code."
+> "Build the metadata form component. It's a modal in <component-file>.tsx that opens after file selection. Needs: auto-generated codes (sequential pattern), editable fields (name/type/source), bulk edit bar, CSV export button. API endpoint already exists at GET /api/next-code."
 
 This tells me exactly what to build, where it goes, and what already exists. I can start coding immediately with 1-2 targeted file reads.
 

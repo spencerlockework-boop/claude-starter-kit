@@ -43,14 +43,13 @@ List the things this module reads or writes:
 - Deletes: ___
 
 ### What services does it talk to?
-- [ ] Database (PostgreSQL)
-- [ ] Storage (S3 / SeaweedFS)
-- [ ] Temporal (workflows)
-- [ ] Redis (real-time)
-- [ ] Keycloak (auth)
-- [ ] NiFi (pipelines)
-- [ ] FFmpeg / media processing
+- [ ] Database: ___
+- [ ] Object storage: ___
+- [ ] Workflow orchestration: ___
+- [ ] Cache / pub-sub: ___
+- [ ] Auth provider: ___
 - [ ] External API: ___
+- [ ] Other: ___
 
 ### What already exists?
 List any files, routes, components, or DB tables that are already built for this:

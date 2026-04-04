@@ -40,7 +40,7 @@ cp "$SOURCE_REPO/.claude/agents/"*.md .claude/agents/ 2>/dev/null || true
 
 # 3. Copy UNIVERSAL commands only (not project-specific)
 # Project-specific commands (new-session, plan-feature, spec, pickup) reference
-# SourceVault paths — users adapt those manually after install.
+# These reference project-specific paths — users adapt them manually after install.
 for cmd in handoff sync-status cleanup audit review; do
   [ -f "$SOURCE_REPO/.claude/commands/$cmd.md" ] && cp "$SOURCE_REPO/.claude/commands/$cmd.md" .claude/commands/
 done

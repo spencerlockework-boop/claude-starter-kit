@@ -5,13 +5,23 @@
 
 set -e
 
-REPO="${GITHUB_REPO:-spencerlockework-boop/sourcevault}"
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$REPO_ROOT"
 
 if ! command -v gh &> /dev/null; then
   echo "ERROR: gh CLI not installed. https://cli.github.com/"
   exit 1
+fi
+
+# Auto-detect repo from git remote, or use GITHUB_REPO env var
+if [ -z "$GITHUB_REPO" ]; then
+  REPO=$(gh repo view --json nameWithOwner -q .nameWithOwner 2>/dev/null || echo "")
+  if [ -z "$REPO" ]; then
+    echo "ERROR: Could not detect GitHub repo. Set GITHUB_REPO env var or run from inside a GitHub repo."
+    exit 1
+  fi
+else
+  REPO="$GITHUB_REPO"
 fi
 
 echo "Fetching issues from $REPO..."
@@ -25,13 +35,13 @@ COUNT=$(jq 'length' docs/features.json)
 echo "Synced $COUNT open issues to docs/features.json"
 
 # Generate a human-readable FEATURES.md snapshot
-python3 << 'PYEOF'
+REPO="$REPO" python3 << 'PYEOF'
 import json
 import os
 from datetime import datetime
 from pathlib import Path
 
-repo = os.environ.get("REPO", "spencerlockework-boop/sourcevault")
+repo = os.environ.get("REPO", "")
 issues = json.loads(Path("docs/features.json").read_text())
 
 # Group by primary label

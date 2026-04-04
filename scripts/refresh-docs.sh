@@ -1,7 +1,7 @@
 #!/bin/bash
 # refresh-docs.sh
 # Run all automated documentation updates.
-# Does NOT update docs that need Claude (sourcevault-map, architecture-review, audit-report, CLAUDE.md).
+# Does NOT update docs that need Claude (project-map, architecture-review, audit-report, CLAUDE.md).
 
 set -e
 
@@ -34,7 +34,7 @@ git status --short
 
 echo ""
 echo "Docs that STILL need Claude to update:"
-echo "  - docs/sourcevault-map.md  (when adding/changing modules)  → use /spec"
+echo "  - docs/<your-project>-map.md  (when adding/changing modules)  → use /spec"
 echo "  - docs/architecture-review.md  (major architecture changes) → regenerate in fresh session"
 echo "  - docs/audit-report.md  (periodic audits)  → use /audit"
 echo "  - CLAUDE.md  (stack or architecture changes)"

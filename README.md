@@ -263,7 +263,7 @@ This kit is developer tooling that lives **alongside** your app code, not part o
 - `scripts/` — kit scripts alongside your own scripts
 
 **Working docs** (project-specific, created by Claude sessions):
-- `docs/sourcevault-map.md` (or your equivalent) — module specs
+- `docs/<your-project>-map.md` — module specs and status
 - `docs/architecture-review.md` — architecture decisions
 - `docs/audit-report.md` — audit findings
 - `docs/FEATURES.md` — mirror of GitHub Issues

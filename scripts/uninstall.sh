@@ -1,7 +1,7 @@
 #!/bin/bash
 # uninstall.sh
 # Remove Claude Code starter kit files from a repo.
-# Does NOT touch project files (CLAUDE.md, custom commands, memory, docs/sourcevault-map, etc.)
+# Does NOT touch project files (CLAUDE.md, custom commands, memory, project-specific docs, etc.)
 # Only removes kit-managed files.
 
 set -e
