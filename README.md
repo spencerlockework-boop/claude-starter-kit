@@ -49,13 +49,14 @@ Sync updates universal files only (agents, universal commands, skills, settings,
   skills/          Design system guidance (frontend-design, ui-ux-design, uncodixify-rules, project-manager-readme)
   settings.json    Deny rules (rm -rf, force push, .env reads) + prettier hook
 scripts/
-  init-claude-system.sh    Install this kit into any repo (local)
-  init-from-github.sh      Install from GitHub with curl | bash
-  sync-from-kit.sh         Pull latest universal files into a project (local)
-  sync-from-github.sh      Sync from GitHub (always latest)
-  uninstall.sh             Remove kit files (keeps your project files)
-  backup-memory.sh         Git-independent memory backup
-  export-features-db.sh    Generate features.json from your map doc
+  init-claude-system.sh       Install this kit into any repo (local)
+  init-from-github.sh         Install from GitHub with curl | bash
+  sync-from-kit.sh            Pull latest universal files into a project (local)
+  sync-from-github.sh         Sync from GitHub (always latest)
+  uninstall.sh                Remove kit files (keeps your project files)
+  backup-memory.sh            Git-independent memory backup
+  sync-features-from-issues.sh  Pull GitHub Issues → docs/FEATURES.md + features.json
+  refresh-docs.sh             Run all automated doc updates (features, memory, cleanup)
 docs/
   how-claude-code-works.md Mental model and token management
   module-spec-template.md  Template for speccing new modules
@@ -110,7 +111,8 @@ alias ccheat="less $HOME/Documents/Claude-Code-Repos/claude-starter-kit/README.m
 | `bash scripts/sync-from-github.sh [target]` | Sync from GitHub (always gets latest main) |
 | `bash scripts/uninstall.sh [target]` | Remove kit files from a repo (keeps your project files) |
 | `bash scripts/backup-memory.sh` | Backup memory files to `docs/memory-backup/` |
-| `bash scripts/export-features-db.sh` | Generate `docs/features.json` from your map doc |
+| `bash scripts/sync-features-from-issues.sh` | Pull GitHub Issues into `docs/FEATURES.md` + `docs/features.json` |
+| `bash scripts/refresh-docs.sh` | One-command doc refresh (features + memory + cleanup) |
 
 ---
 
@@ -246,6 +248,35 @@ Start a session with one of these:
 - "If you need to explore, use subagents"
 
 ---
+
+## Separation of Concerns
+
+This kit is developer tooling that lives **alongside** your app code, not part of it:
+
+**App code** (stays as-is):
+- `apps/`, `packages/`, `infra/`, `src/` — whatever your stack uses
+- Your app's own docs in `docs/` (architecture.md, domain-model.md, etc.)
+
+**Claude Code system** (this kit):
+- `.claude/` — agents, commands, skills, settings
+- `CLAUDE.md` — project brain (the one file that bridges both)
+- `scripts/` — kit scripts alongside your own scripts
+
+**Working docs** (project-specific, created by Claude sessions):
+- `docs/sourcevault-map.md` (or your equivalent) — module specs
+- `docs/architecture-review.md` — architecture decisions
+- `docs/audit-report.md` — audit findings
+- `docs/FEATURES.md` — mirror of GitHub Issues
+- `docs/features.json` — machine-readable feature snapshot
+
+**Work tracking:**
+- **GitHub Issues** are the source of truth for backlog/bugs/features
+- `docs/FEATURES.md` is a local mirror, regenerate with `sync-features-from-issues.sh`
+
+**What to commit vs. gitignore:**
+- Commit: `.claude/`, `CLAUDE.md`, `.github/workflows/`, all docs
+- Gitignore: `.claude/worktrees/`, `.claude/settings.local.json`
+- Team preference: `docs/memory-backup/` (personal decision history) and `docs/features.json` (derived)
 
 ## License
 

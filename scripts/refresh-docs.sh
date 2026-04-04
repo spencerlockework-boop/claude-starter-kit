@@ -11,10 +11,10 @@ cd "$REPO_ROOT"
 echo "Refreshing automated docs in: $REPO_ROOT"
 echo ""
 
-# 1. Regenerate features.json from sourcevault-map.md
-if [ -f scripts/export-features-db.sh ]; then
-  echo "→ Regenerating docs/features.json..."
-  bash scripts/export-features-db.sh
+# 1. Sync features from GitHub Issues (source of truth)
+if [ -f scripts/sync-features-from-issues.sh ]; then
+  echo "→ Syncing features from GitHub Issues..."
+  bash scripts/sync-features-from-issues.sh
 fi
 
 # 2. Backup memory files to docs/memory-backup/
@@ -37,8 +37,10 @@ echo "Docs that STILL need Claude to update:"
 echo "  - docs/sourcevault-map.md  (when adding/changing modules)  → use /spec"
 echo "  - docs/architecture-review.md  (major architecture changes) → regenerate in fresh session"
 echo "  - docs/audit-report.md  (periodic audits)  → use /audit"
-echo "  - docs/FEATURES.md  (manual status updates)"
 echo "  - CLAUDE.md  (stack or architecture changes)"
+echo ""
+echo "docs/FEATURES.md and docs/features.json are auto-generated from GitHub Issues."
+echo "Manage work items via: gh issue create / gh issue list / gh issue edit"
 echo ""
 echo "To sync universal files from starter kit:"
 echo "  bash ~/Documents/Claude-Code-Repos/claude-starter-kit/scripts/sync-from-kit.sh"
