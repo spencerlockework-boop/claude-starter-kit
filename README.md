@@ -46,11 +46,14 @@ Sync updates universal files only (agents, universal commands, skills, settings,
 .claude/
   agents/          Universal subagents: frontend-builder, backend-builder, code-reviewer, architect
   commands/        Universal slash commands: handoff, sync-status, cleanup, audit, review
-  skills/          Design system guidance (frontend-design, ui-ux-design, uncodixify-rules)
+  skills/          Design system guidance (frontend-design, ui-ux-design, uncodixify-rules, project-manager-readme)
   settings.json    Deny rules (rm -rf, force push, .env reads) + prettier hook
 scripts/
-  init-claude-system.sh    Install this kit into any repo
-  sync-from-kit.sh         Pull latest universal files into a project
+  init-claude-system.sh    Install this kit into any repo (local)
+  init-from-github.sh      Install from GitHub with curl | bash
+  sync-from-kit.sh         Pull latest universal files into a project (local)
+  sync-from-github.sh      Sync from GitHub (always latest)
+  uninstall.sh             Remove kit files (keeps your project files)
   backup-memory.sh         Git-independent memory backup
   export-features-db.sh    Generate features.json from your map doc
 docs/
@@ -59,7 +62,13 @@ docs/
 templates/
   CLAUDE.md                Starter template to customize per project
   commands/                Project-specific command templates (new-session, plan-feature, spec)
+  .gitignore               Common ignores + Claude Code specifics (worktrees, local settings)
+  .github/
+    workflows/             claude-review.yml (PR auto-review) + nightly-cleanup.yml (daily audit)
+    ISSUE_TEMPLATE/        feature.yml + bug.yml with agent-assignment fields
 ```
+
+When you run `init-claude-system.sh`, it copies all universal files into your repo AND installs the template `.github/` workflows and `.gitignore` (only if they don't already exist). The uninstall script reverses this.
 
 ---
 
@@ -95,8 +104,11 @@ alias ccheat="less $HOME/Documents/Claude-Code-Repos/claude-starter-kit/README.m
 
 | Script | What it does |
 |--------|-------------|
-| `bash scripts/init-claude-system.sh [target]` | Install kit into another repo |
-| `bash scripts/sync-from-kit.sh [target]` | Pull latest universal files into a project |
+| `bash scripts/init-claude-system.sh [target]` | Install kit into another repo (from local clone) |
+| `bash scripts/init-from-github.sh [target]` | Install from GitHub (no local clone needed) |
+| `bash scripts/sync-from-kit.sh [target]` | Pull latest universal files into a project (from local clone) |
+| `bash scripts/sync-from-github.sh [target]` | Sync from GitHub (always gets latest main) |
+| `bash scripts/uninstall.sh [target]` | Remove kit files from a repo (keeps your project files) |
 | `bash scripts/backup-memory.sh` | Backup memory files to `docs/memory-backup/` |
 | `bash scripts/export-features-db.sh` | Generate `docs/features.json` from your map doc |
 
