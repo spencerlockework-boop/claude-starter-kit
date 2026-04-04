@@ -3,16 +3,26 @@
 # Backs up Claude memory files to the repo (Git-independent backup).
 # Memory lives at ~/.claude/projects/.../memory/ which is machine-local.
 # This script copies them into docs/memory-backup/ so they ride along in git.
+#
+# Auto-detects the memory directory from the current repo path.
+# Override with REPO_PATH or MEMORY_DIR env vars if needed.
 
 set -e
 
-REPO_PATH="${REPO_PATH:-/path/to/your-project}"
-PROJECT_SLUG="-your-project-slug"
-MEMORY_DIR="$HOME/.claude/projects/$PROJECT_SLUG/memory"
+# Default: current working directory (assume run from repo root)
+REPO_PATH="${REPO_PATH:-$(pwd)}"
+
+# Claude's project memory slug is the absolute path with / → -
+if [ -z "$MEMORY_DIR" ]; then
+  PROJECT_SLUG=$(echo "$REPO_PATH" | sed 's|/|-|g')
+  MEMORY_DIR="$HOME/.claude/projects/$PROJECT_SLUG/memory"
+fi
+
 BACKUP_DIR="$REPO_PATH/docs/memory-backup"
 
 if [ ! -d "$MEMORY_DIR" ]; then
   echo "ERROR: Memory dir not found: $MEMORY_DIR"
+  echo "       Set MEMORY_DIR env var to override."
   exit 1
 fi
 
@@ -41,5 +51,5 @@ This directory is an automated backup of Claude Code memory files from:
 EOF
 
 COUNT=$(ls -1 "$BACKUP_DIR"/*.md 2>/dev/null | wc -l | tr -d ' ')
-echo "✓ Backed up $COUNT memory files to $BACKUP_DIR"
-echo "  Commit them with: git add docs/memory-backup && git commit -m 'Backup memory files'"
+echo "Backed up $COUNT memory files to $BACKUP_DIR"
+echo "Commit them with: git add docs/memory-backup && git commit -m 'Backup memory files'"

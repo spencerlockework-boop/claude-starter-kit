@@ -6,7 +6,7 @@ Steps:
 1. Get today's date in YYYY-MM-DD format (from `/currentDate` context).
 2. Look at what was accomplished this session (git diff, tasks completed).
 3. Look at what's still in progress or planned.
-4. Write a dated handoff memory file at `~/.claude/projects/-your-project-slug/memory/handoff_YYYY-MM-DD.md` with:
+4. Write a dated handoff memory file at `~/.claude/projects/<project-slug>/memory/handoff_YYYY-MM-DD.md` (where `<project-slug>` is the absolute path of the repo with `/` replaced by `-`) with:
    - What was built/changed this session
    - What's still broken or incomplete
    - The exact next steps to pick up
