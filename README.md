@@ -263,11 +263,23 @@ This kit is developer tooling that lives **alongside** your app code, not part o
 - `scripts/` — kit scripts alongside your own scripts
 
 **Working docs** (project-specific, created by Claude sessions):
-- `docs/<your-project>-map.md` — module specs and status
-- `docs/architecture-review.md` — architecture decisions
-- `docs/audit-report.md` — audit findings
-- `docs/FEATURES.md` — mirror of GitHub Issues
-- `docs/features.json` — machine-readable feature snapshot
+- `docs/architecture.md` — **stable reference**: the system as it is (4-plane model, stack, constraints). Changes rarely.
+- `docs/architecture-review.md` — **point-in-time analysis**: what's broken + PR plan to fix it. Regenerated periodically.
+- `docs/<your-project>-map.md` — module specs, status, field schemas. Updated with every module spec change.
+- `docs/audit-report.md` — audit findings (security, perf, design, etc.). Regenerate with `/audit`.
+- `docs/FEATURES.md` — mirror of GitHub Issues. Regenerate with `sync-features-from-issues.sh`.
+- `docs/features.json` — machine-readable feature snapshot. Regenerated alongside FEATURES.md.
+
+### Architecture docs: stable vs point-in-time
+
+Keep them **separate**:
+
+| Doc | Role | Analogy | When to update |
+|-----|------|---------|----------------|
+| `architecture.md` | The blueprint — how the system IS designed | Building blueprint | Only when architecture actually changes |
+| `architecture-review.md` | The inspection report — what's wrong + fix plan | Inspector's report | Regenerated after major audits or before big refactors |
+
+If you only have one architecture doc, use `architecture.md`. Create `architecture-review.md` only when you need a PR-oriented fix plan or an Opus-level architecture re-assessment.
 
 **Work tracking:**
 - **GitHub Issues** are the source of truth for backlog/bugs/features
