@@ -193,33 +193,52 @@ Then `/codex:review` offloads code review to OpenAI = zero Claude tokens.
 
 Runs WITHOUT you asking:
 
-| What | When |
-|------|------|
-| Prettier auto-format | After any Edit/Write on code files (via settings.json hook) |
-| Deny rule enforcement | Every Bash/Read call |
-| CLAUDE.md + MEMORY.md load | Every new session |
-| Subagents default to Sonnet | Every subagent spawn |
+| What | When | Where |
+|------|------|-------|
+| Prettier auto-format | After any Edit/Write on code files | `.claude/settings.json` hook |
+| Deny rule enforcement | Every Bash/Read call | `.claude/settings.json` |
+| CLAUDE.md + MEMORY.md load | Every new session | Claude Code built-in |
+| Subagents default to Sonnet | Every subagent spawn | `CLAUDE_CODE_SUBAGENT_MODEL` env var |
+| Nightly cleanup audit | 7am UTC daily | `.github/workflows/nightly-cleanup.yml` |
+| Claude PR review | Every PR (if `ANTHROPIC_API_KEY` secret set) | `.github/workflows/claude-review.yml` |
 
 ## What You Run Manually
 
+No Claude tokens used:
+
 | Task | Command |
 |------|---------|
+| Refresh all derived docs | `bash scripts/refresh-docs.sh` |
+| Sync features from GitHub Issues | `bash scripts/sync-features-from-issues.sh` |
 | Back up memory to git | `bash scripts/backup-memory.sh` |
-| Refresh features.json | `bash scripts/export-features-db.sh` |
-| Sync kit updates | `bash scripts/sync-from-kit.sh` |
+| Sync starter kit updates | `bash scripts/sync-from-kit.sh` or `sync-from-github.sh` |
 | Commit + push | `git commit` / `git push` |
 
 ## What Claude Runs (ask it)
 
+Uses Claude tokens:
+
 | Task | Command |
 |------|---------|
+| Orient fresh session | `/new-session` |
+| Plan a feature | `/plan-feature <name>` |
+| Write a module spec | `/spec <name>` |
 | Audit codebase | `/audit [scope]` |
-| Review changes | `/review` or `/codex:review` |
-| Plan feature | `/plan-feature <name>` |
-| Write spec | `/spec <name>` |
+| Review changes | `/review` |
 | Clean dead files | `/cleanup` |
-| Save session | `/handoff` |
-| Next issue | `/pickup` |
+| Save session state | `/handoff` |
+| Regenerate architecture review | `/regen-arch` |
+| Refresh docs (script + FEATURES.md update) | `/refresh-docs` |
+| Next GitHub issue | `/pickup` |
+| Quick status | `/sync-status` |
+
+## External (no Claude tokens)
+
+| Task | Command |
+|------|---------|
+| Code review via OpenAI Codex | `/codex:review` |
+| Adversarial review | `/codex:adversarial-review` |
+| Delegate investigation/fix | `/codex:rescue` |
 
 ---
 
