@@ -268,6 +268,30 @@ Start a session with one of these:
 
 ---
 
+## After Install — Customize These
+
+When you install the kit, 4 commands get copied as **templates** — they reference project paths that differ per project. Edit them once when you first set up your repo:
+
+| File | What to customize |
+|------|-------------------|
+| `.claude/commands/new-session.md` | Path to your map doc (e.g. `docs/myapp-map.md`) |
+| `.claude/commands/plan-feature.md` | Your directory paths (e.g. `src/api/`, `src/web/`) |
+| `.claude/commands/spec.md` | Your map doc name |
+| `.claude/commands/regen-arch.md` | Your map doc name |
+
+Look for HTML comment headers (`<!-- TEMPLATE: ... -->`) and `<placeholder>` values.
+
+**Universal commands** (no customization — they work in any repo):
+- `/handoff`, `/sync-status`, `/cleanup`, `/audit`, `/review`
+
+**Optional**: Create a `/pickup` command that hits your GitHub repo:
+```bash
+# .claude/commands/pickup.md
+Read GitHub issues from <your-org>/<your-repo>, sort by label priority, pick up the next unassigned one.
+```
+
+---
+
 ## Separation of Concerns
 
 This kit is developer tooling that lives **alongside** your app code, not part of it:
