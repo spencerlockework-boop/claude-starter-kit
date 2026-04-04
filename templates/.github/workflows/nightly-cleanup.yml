@@ -17,51 +17,50 @@ jobs:
 
       - name: Find dead files
         id: audit
+        shell: bash
         run: |
+          set +e
+          findings=""
+
+          DS=$(find . -name ".DS_Store" -not -path "./node_modules/*" -not -path "./.git/*" | wc -l | tr -d ' ')
+          if [ "$DS" -gt 0 ]; then findings="${findings}- ${DS} .DS_Store files found"$'\n'; fi
+
+          TSB=$(git ls-files | grep -c tsbuildinfo)
+          if [ "$TSB" -gt 0 ]; then findings="${findings}- ${TSB} .tsbuildinfo files tracked in git"$'\n'; fi
+
+          EMPTY=$(find . -type d -empty -not -path "./node_modules/*" -not -path "./.git/*" | wc -l | tr -d ' ')
+          if [ "$EMPTY" -gt 0 ]; then findings="${findings}- ${EMPTY} empty directories"$'\n'; fi
+
+          stubs=""
+          while IFS= read -r f; do
+            LINES=$(wc -l < "$f" | tr -d ' ')
+            if [ "$LINES" -lt 5 ]; then stubs="${stubs}- ${f} (${LINES} lines)"$'\n'; fi
+          done < <(find docs -name "*.md" -type f 2>/dev/null)
+
           {
+            echo "has_findings=$([ -n "$findings$stubs" ] && echo true || echo false)"
             echo "findings<<EOF"
             echo "## Dead file audit ($(date +%Y-%m-%d))"
             echo ""
-
-            # .DS_Store
-            DS=$(find . -name ".DS_Store" -not -path "./node_modules/*" -not -path "./.git/*" | wc -l)
-            [ "$DS" -gt 0 ] && echo "- $DS .DS_Store files found"
-
-            # Build artifacts tracked
-            TSB=$(git ls-files | grep -c tsbuildinfo || true)
-            [ "$TSB" -gt 0 ] && echo "- $TSB .tsbuildinfo files tracked in git"
-
-            # Empty directories
-            EMPTY=$(find . -type d -empty -not -path "./node_modules/*" -not -path "./.git/*" | wc -l)
-            [ "$EMPTY" -gt 0 ] && echo "- $EMPTY empty directories"
-
-            # Stub files (under 5 lines)
-            echo ""
-            echo "## Stub files (< 5 lines):"
-            find docs -name "*.md" -type f 2>/dev/null | while read f; do
-              LINES=$(wc -l < "$f")
-              [ "$LINES" -lt 5 ] && echo "- $f ($LINES lines)"
-            done
-
-            # Dated handoffs count
-            echo ""
-            echo "## Handoff history:"
-            echo "Check ~/.claude/projects/.../memory/ for dated handoff files"
-
+            if [ -n "$findings" ]; then echo "$findings"; fi
+            if [ -n "$stubs" ]; then
+              echo "## Stub files (< 5 lines):"
+              echo "$stubs"
+            fi
             echo "EOF"
           } >> $GITHUB_OUTPUT
+          exit 0
 
       - name: Open issue if findings
+        if: steps.audit.outputs.has_findings == 'true'
         uses: actions/github-script@v7
         with:
           script: |
             const findings = `${{ steps.audit.outputs.findings }}`;
-            if (findings.includes('found') || findings.includes('tracked') || findings.includes('(') ) {
-              github.rest.issues.create({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                title: `Nightly cleanup findings — ${new Date().toISOString().split('T')[0]}`,
-                body: findings,
-                labels: ['cleanup', 'automated']
-              });
-            }
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `Nightly cleanup findings — ${new Date().toISOString().split('T')[0]}`,
+              body: findings,
+              labels: ['cleanup', 'automated']
+            });
