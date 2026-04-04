@@ -1,0 +1,37 @@
+name: Claude Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Claude Code Review
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          model: claude-sonnet-4-6
+          review_comment_prefix: "🔍"
+          direct_prompt: |
+            Review this PR for:
+            1. Security issues (OWASP top 10, injection, auth bypass)
+            2. Design system violations (Zinc palette, max 8px radius, 150ms transitions, no emojis as icons)
+            3. Missing error handling or loading states
+            4. Type safety (no `any` unless necessary)
+            5. Accessibility (aria-labels, keyboard navigation)
+            6. Performance (unnecessary re-renders, missing memoization)
+
+            This is a Media Asset Management system. See CLAUDE.md for full context.
+
+            Be concise. Only flag real issues, not style preferences.

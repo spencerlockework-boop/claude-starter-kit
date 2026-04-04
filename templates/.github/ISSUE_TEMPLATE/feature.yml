@@ -1,0 +1,38 @@
+name: Feature
+description: New feature or enhancement
+labels: ["feature"]
+body:
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - frontend
+        - backend
+        - infra
+        - workers
+        - database
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What should be built?
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance Criteria
+      description: How do we know it's done?
+  - type: dropdown
+    id: agent
+    attributes:
+      label: Suggested Agent
+      description: Which Claude agent should handle this?
+      options:
+        - frontend-builder (Sonnet)
+        - backend-builder (Sonnet)
+        - architect (Opus)
+        - manual (Spencer + Opus)

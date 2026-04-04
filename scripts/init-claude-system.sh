@@ -71,6 +71,31 @@ cp "$SOURCE_REPO/scripts/backup-memory.sh" scripts/ 2>/dev/null || true
 cp "$SOURCE_REPO/scripts/export-features-db.sh" scripts/ 2>/dev/null || true
 chmod +x scripts/*.sh 2>/dev/null || true
 
+# 6b. Copy .github templates (workflows, issue templates) if they don't exist
+if [ -d "$SOURCE_REPO/templates/.github" ]; then
+  mkdir -p .github/workflows .github/ISSUE_TEMPLATE
+  for f in "$SOURCE_REPO/templates/.github/workflows/"*.yml; do
+    name=$(basename "$f")
+    [ ! -f ".github/workflows/$name" ] && cp "$f" ".github/workflows/$name"
+  done
+  for f in "$SOURCE_REPO/templates/.github/ISSUE_TEMPLATE/"*.yml; do
+    name=$(basename "$f")
+    [ ! -f ".github/ISSUE_TEMPLATE/$name" ] && cp "$f" ".github/ISSUE_TEMPLATE/$name"
+  done
+fi
+
+# 6c. Merge .gitignore if doesn't have Claude Code entries
+if [ -f "$SOURCE_REPO/templates/.gitignore" ]; then
+  if [ ! -f .gitignore ]; then
+    cp "$SOURCE_REPO/templates/.gitignore" .gitignore
+  elif ! grep -q ".claude/worktrees" .gitignore; then
+    echo "" >> .gitignore
+    echo "# Added by claude-starter-kit" >> .gitignore
+    echo ".claude/worktrees/" >> .gitignore
+    echo ".claude/settings.local.json" >> .gitignore
+  fi
+fi
+
 # 7. Create FEATURES.md if missing
 if [ ! -f docs/FEATURES.md ]; then
   cat > docs/FEATURES.md << 'EOF'
