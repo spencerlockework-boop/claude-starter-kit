@@ -49,20 +49,24 @@ Sync updates universal files only (agents, universal commands, skills, settings,
   skills/          Design system guidance (frontend-design, ui-ux-design, uncodixify-rules, project-manager-readme)
   settings.json    Deny rules (rm -rf, force push, .env reads) + prettier hook
 scripts/
-  init-claude-system.sh       Install this kit into any repo (local)
-  init-from-github.sh         Install from GitHub with curl | bash
-  sync-from-kit.sh            Pull latest universal files into a project (local)
-  sync-from-github.sh         Sync from GitHub (always latest)
-  uninstall.sh                Remove kit files (keeps your project files)
-  backup-memory.sh            Git-independent memory backup
+  init-claude-system.sh         Install this kit into any repo (local)
+  init-from-github.sh           Install from GitHub with curl | bash
+  sync-from-kit.sh              Pull latest universal files into a project (local)
+  sync-from-github.sh           Sync from GitHub (always latest)
+  uninstall.sh                  Remove kit files (keeps your project files)
+  backup-memory.sh              Git-independent memory backup
+  restore-memory.sh             Restore memory from docs/memory-backup/ (fresh machine)
   sync-features-from-issues.sh  Pull GitHub Issues → docs/FEATURES.md + features.json
-  refresh-docs.sh             Run all automated doc updates (features, memory, cleanup)
+  push-to-issues.sh             Bulk create GitHub Issues from TSV file
+  refresh-docs.sh               Run all automated doc updates (features, memory, cleanup)
+  doctor.sh                     Health-check dev environment (tools, deps, services, config)
 docs/
   how-claude-code-works.md Mental model and token management
   module-spec-template.md  Template for speccing new modules
 templates/
   CLAUDE.md                Starter template to customize per project
-  commands/                Project-specific command templates (new-session, plan-feature, spec)
+  BOOTSTRAP.md             Fresh-machine setup guide (clone → install → run)
+  commands/                Project-specific command templates (new-session, plan-feature, spec, regen-arch)
   .gitignore               Common ignores + Claude Code specifics (worktrees, local settings)
   .github/
     workflows/             claude-review.yml (PR auto-review) + nightly-cleanup.yml (daily audit)
@@ -111,8 +115,11 @@ alias ccheat="less $HOME/Documents/Claude-Code-Repos/claude-starter-kit/README.m
 | `bash scripts/sync-from-github.sh [target]` | Sync from GitHub (always gets latest main) |
 | `bash scripts/uninstall.sh [target]` | Remove kit files from a repo (keeps your project files) |
 | `bash scripts/backup-memory.sh` | Backup memory files to `docs/memory-backup/` |
-| `bash scripts/sync-features-from-issues.sh` | Pull GitHub Issues into `docs/FEATURES.md` + `docs/features.json` |
+| `bash scripts/restore-memory.sh` | Restore memory from `docs/memory-backup/` (fresh machine) |
+| `bash scripts/sync-features-from-issues.sh` | Pull GitHub Issues → `docs/FEATURES.md` + `docs/features.json` |
+| `bash scripts/push-to-issues.sh <file.tsv>` | Bulk create GitHub Issues from TSV (title, body, labels, assignee) |
 | `bash scripts/refresh-docs.sh` | One-command doc refresh (features + memory + cleanup) |
+| `bash scripts/doctor.sh` | Health-check dev environment |
 
 ---
 
@@ -229,6 +236,7 @@ Uses Claude tokens:
 | Save session state | `/handoff` |
 | Regenerate architecture review | `/regen-arch` |
 | Refresh docs (script + FEATURES.md update) | `/refresh-docs` |
+| Push tasks as GitHub Issues | `/push-issues` |
 | Next GitHub issue | `/pickup` |
 | Quick status | `/sync-status` |
 
