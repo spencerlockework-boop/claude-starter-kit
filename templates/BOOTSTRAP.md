@@ -19,7 +19,7 @@ Install these first:
 ## 1. Clone the repo
 
 ```bash
-cd ~/Documents/Claude-Code-Repos
+cd ~/projects  # or wherever you keep repos
 git clone https://github.com/<your-org>/<your-repo>.git <your-repo-dir>
 cd <your-repo-dir>
 ```

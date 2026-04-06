@@ -44,4 +44,5 @@ echo "docs/FEATURES.md and docs/features.json are auto-generated from GitHub Iss
 echo "Manage work items via: gh issue create / gh issue list / gh issue edit"
 echo ""
 echo "To sync universal files from starter kit:"
-echo "  bash ~/Documents/Claude-Code-Repos/claude-starter-kit/scripts/sync-from-kit.sh"
+echo "  bash /path/to/claude-starter-kit/scripts/sync-from-kit.sh"
+echo "  Or: curl -s https://raw.githubusercontent.com/\$CLAUDE_KIT_REPO/main/scripts/sync-from-github.sh | bash"

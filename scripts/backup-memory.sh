@@ -9,8 +9,8 @@
 
 set -e
 
-# Default: current working directory (assume run from repo root)
-REPO_PATH="${REPO_PATH:-$(pwd)}"
+# Default: derive from script location (works regardless of where you run from)
+REPO_PATH="${REPO_PATH:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
 
 # Claude's project memory slug is the absolute path with / → -
 if [ -z "$MEMORY_DIR" ]; then

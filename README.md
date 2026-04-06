@@ -113,7 +113,7 @@ When you run `init-claude-system.sh`, it copies all universal files into your re
 alias cc="claude"                   # start interactive session
 alias ccq="claude -p"               # one-shot prompt, no session
 alias ccr="claude --resume"         # resume last session
-alias ccheat="less $HOME/Documents/Claude-Code-Repos/claude-starter-kit/README.md"
+alias ccheat="less /path/to/claude-starter-kit/README.md"  # adjust path
 ```
 
 ---
