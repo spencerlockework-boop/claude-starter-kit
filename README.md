@@ -254,8 +254,6 @@ Uses Claude tokens:
 | Clean dead files | `/cleanup` |
 | Save session state | `/handoff` |
 | Regenerate architecture review | `/regen-arch` |
-| Refresh docs (script + FEATURES.md update) | `/refresh-docs` |
-| Push tasks as GitHub Issues | `/push-issues` |
 | Next GitHub issue | `/pickup` *(optional — create yourself)* |
 | Quick status | `/sync-status` |
 
