@@ -53,7 +53,7 @@ for f in "$KIT_ROOT/.claude/agents/"*.md; do
 done
 
 # Sync universal commands only (skip project-specific)
-for cmd in handoff sync-status cleanup audit review; do
+for cmd in handoff sync-status cleanup audit review test; do
   src="$KIT_ROOT/.claude/commands/$cmd.md"
   dst="$TARGET/.claude/commands/$cmd.md"
   if [ -f "$src" ] && [ -f "$dst" ]; then

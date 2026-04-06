@@ -54,7 +54,7 @@ Both `init-from-github.sh` and `sync-from-github.sh` respect this env var.
 .claude/
   agents/          Universal subagents: frontend-builder, backend-builder, code-reviewer, architect
   commands/        Universal slash commands: handoff, sync-status, cleanup, audit, review
-  skills/          Skill folders (frontend-design, ui-ux-design, uncodixify-rules, project-manager-readme)
+  skills/          Skill folders (frontend-design, ui-ux-design, uncodixify-rules + synced external skills)
   settings.json    Deny rules (rm -rf, force push, .env reads) + prettier hook
 skills.json        External skill manifest (upstream sources + plugin registry)
 scripts/
@@ -99,6 +99,7 @@ When you run `init-claude-system.sh`, it copies all universal files into your re
 | `/sync-status` | 10-line status report (branch, commits, dirty files, next action) | Quick check-in |
 | `/audit [scope]` | Parallel forked Sonnet subagents (security, frontend, backend) — results only in main context | Before PRs, periodically |
 | `/review` | Review recent changes via subagents | Before committing |
+| `/test` | Run test suite, summarize pass/fail | After implementing, before committing |
 | `/cleanup` | Find duplicates, dead files, stubs, bloat | Weekly maintenance |
 | `/handoff` | Save dated session state to memory | When context is ~70% full |
 | `/pickup [issue#]` | Read GitHub issues, pick next task *(optional — create yourself)* | Start of new session |
@@ -251,6 +252,7 @@ Uses Claude tokens:
 | Write a module spec | `/spec <name>` |
 | Audit codebase | `/audit [scope]` |
 | Review changes | `/review` |
+| Run tests | `/test` |
 | Clean dead files | `/cleanup` |
 | Save session state | `/handoff` |
 | Regenerate architecture review | `/regen-arch` |
@@ -307,7 +309,7 @@ When you install the kit, 4 commands get copied as **templates** — they refere
 Look for HTML comment headers (`<!-- TEMPLATE: ... -->`) and `<placeholder>` values.
 
 **Universal commands** (no customization — they work in any repo):
-- `/handoff`, `/sync-status`, `/cleanup`, `/audit`, `/review`
+- `/handoff`, `/sync-status`, `/cleanup`, `/audit`, `/review`, `/test`
 
 **Optional**: Create a `/pickup` command that hits your GitHub repo:
 ```bash
@@ -384,7 +386,6 @@ Skills are pulled from upstream repos and tracked in `skills.json`:
 | Skill | Source | Type |
 |-------|--------|------|
 | ui-ux-design | Local (ships with kit) | Local |
-| project-manager-readme | Local (ships with kit) | Local |
 | uncodixify-rules | [cyxzdev/Uncodixfy](https://github.com/cyxzdev/Uncodixfy) | File sync |
 | frontend-design | [anthropics/claude-code](https://github.com/anthropics/claude-code/tree/main/plugins/frontend-design) | File sync / Plugin |
 | obsidian-markdown | [kepano/obsidian-skills](https://github.com/kepano/obsidian-skills) | File sync |

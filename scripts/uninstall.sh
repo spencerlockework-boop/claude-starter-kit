@@ -45,6 +45,7 @@ rm -f .claude/commands/sync-status.md
 rm -f .claude/commands/cleanup.md
 rm -f .claude/commands/audit.md
 rm -f .claude/commands/review.md
+rm -f .claude/commands/test.md
 
 # Skills
 rm -rf .claude/skills
