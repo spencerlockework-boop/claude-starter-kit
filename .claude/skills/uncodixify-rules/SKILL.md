@@ -1,5 +1,7 @@
 # Uncodixify
 
+**Scope: product UI, dashboards, and internal tools.** For creative/marketing/portfolio work, prefer the frontend-design skill instead.
+
 This document exists to teach you how to act as non-Codex as possible when building UI.
 
 Codex UI is the default AI aesthetic: soft gradients, floating panels, eyebrow labels, decorative copy, hero sections in dashboards, oversized rounded corners, transform animations, dramatic shadows, and layouts that try too hard to look premium. It's the visual language that screams "an AI made this" because it follows the path of least resistance.

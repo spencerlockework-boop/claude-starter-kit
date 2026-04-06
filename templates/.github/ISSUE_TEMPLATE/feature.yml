@@ -6,11 +6,11 @@ body:
     id: area
     attributes:
       label: Area
+      # <!-- TEMPLATE: customize areas for your project -->
       options:
         - frontend
         - backend
         - infra
-        - workers
         - database
     validations:
       required: true
@@ -35,4 +35,4 @@ body:
         - frontend-builder (Sonnet)
         - backend-builder (Sonnet)
         - architect (Opus)
-        - manual (Spencer + Opus)
+        - manual (human + Opus)

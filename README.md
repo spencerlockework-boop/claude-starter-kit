@@ -46,8 +46,9 @@ Sync updates universal files only (agents, universal commands, skills, settings,
 .claude/
   agents/          Universal subagents: frontend-builder, backend-builder, code-reviewer, architect
   commands/        Universal slash commands: handoff, sync-status, cleanup, audit, review
-  skills/          Design system guidance (frontend-design, ui-ux-design, uncodixify-rules, project-manager-readme)
+  skills/          Skill folders (frontend-design, ui-ux-design, uncodixify-rules, project-manager-readme)
   settings.json    Deny rules (rm -rf, force push, .env reads) + prettier hook
+skills.json        External skill manifest (upstream sources + plugin registry)
 scripts/
   init-claude-system.sh         Install this kit into any repo (local)
   init-from-github.sh           Install from GitHub with curl | bash
@@ -59,7 +60,10 @@ scripts/
   sync-features-from-issues.sh  Pull GitHub Issues → docs/FEATURES.md + features.json
   push-to-issues.sh             Bulk create GitHub Issues from TSV file
   refresh-docs.sh               Run all automated doc updates (features, memory, cleanup)
-  doctor.sh                     Health-check dev environment (tools, deps, services, config)
+  doctor.sh                     Health-check Claude Code environment
+  update-external-skills.sh     Sync file-based skills from upstream repos
+  install-plugins.sh            Print plugin install commands for Claude Code session
+  lint-refs.sh                  Check for stale cross-file references
 docs/
   how-claude-code-works.md Mental model and token management
   module-spec-template.md  Template for speccing new modules
@@ -85,7 +89,7 @@ When you run `init-claude-system.sh`, it copies all universal files into your re
 | `/plan-feature <name>` | Break feature into tasks, assign agents, identify dependencies | Before building anything non-trivial |
 | `/spec <name>` | Write a module spec into your map doc | Before implementing a new module |
 | `/sync-status` | 10-line status report (branch, commits, dirty files, next action) | Quick check-in |
-| `/audit [scope]` | Parallel Sonnet audit subagents (security, frontend, backend, db, infra, performance, accessibility, data-integrity) | Before PRs, periodically |
+| `/audit [scope]` | Parallel forked Sonnet subagents (security, frontend, backend) — results only in main context | Before PRs, periodically |
 | `/review` | Review recent changes via subagents | Before committing |
 | `/cleanup` | Find duplicates, dead files, stubs, bloat | Weekly maintenance |
 | `/handoff` | Save dated session state to memory | When context is ~70% full |
@@ -119,7 +123,10 @@ alias ccheat="less $HOME/Documents/Claude-Code-Repos/claude-starter-kit/README.m
 | `bash scripts/sync-features-from-issues.sh` | Pull GitHub Issues → `docs/FEATURES.md` + `docs/features.json` |
 | `bash scripts/push-to-issues.sh <file.tsv>` | Bulk create GitHub Issues from TSV (title, body, labels, assignee) |
 | `bash scripts/refresh-docs.sh` | One-command doc refresh (features + memory + cleanup) |
-| `bash scripts/doctor.sh` | Health-check dev environment |
+| `bash scripts/doctor.sh` | Health-check Claude Code environment |
+| `bash scripts/update-external-skills.sh` | Sync file-based skills from upstream repos |
+| `bash scripts/install-plugins.sh` | Print plugin install commands for Claude Code session |
+| `bash scripts/lint-refs.sh` | Check for stale cross-file references |
 
 ---
 
@@ -139,7 +146,7 @@ ls ~/.claude/projects/*/memory/handoff_*.md
 
 # Find duplicate markdown files
 find . -name "*.md" -not -path "./node_modules/*" -not -path "./.git/*" \
-  -exec md5sum {} \; | sort | uniq -d -w32
+  -exec md5 -r {} \; | sort | uniq -d -w32
 
 # Clean .DS_Store
 find . -name ".DS_Store" -not -path "./node_modules/*" -delete
@@ -207,7 +214,7 @@ Runs WITHOUT you asking:
 | CLAUDE.md + MEMORY.md load | Every new session | Claude Code built-in |
 | Subagents default to Sonnet | Every subagent spawn | `CLAUDE_CODE_SUBAGENT_MODEL` env var |
 | Nightly cleanup audit | 7am UTC daily | `.github/workflows/nightly-cleanup.yml` |
-| Claude PR review | Every PR (if `ANTHROPIC_API_KEY` secret set) | `.github/workflows/claude-review.yml` |
+| Claude PR review | Every PR (reads CLAUDE.md for context, needs `ANTHROPIC_API_KEY` secret) | `.github/workflows/claude-review.yml` |
 
 ## What You Run Manually
 
@@ -219,6 +226,10 @@ No Claude tokens used:
 | Sync features from GitHub Issues | `bash scripts/sync-features-from-issues.sh` |
 | Back up memory to git | `bash scripts/backup-memory.sh` |
 | Sync starter kit updates | `bash scripts/sync-from-kit.sh` or `sync-from-github.sh` |
+| Update external skills | `bash scripts/update-external-skills.sh` |
+| Install plugin skills | `bash scripts/install-plugins.sh` (prints commands to paste) |
+| Health-check environment | `bash scripts/doctor.sh` |
+| Check for stale refs | `bash scripts/lint-refs.sh` |
 | Commit + push | `git commit` / `git push` |
 
 ## What Claude Runs (ask it)
@@ -356,9 +367,58 @@ If you only have one architecture doc, use `architecture.md`. `architecture-revi
 - `docs/FEATURES.md` is a local mirror, regenerate with `sync-features-from-issues.sh`
 
 **What to commit vs. gitignore:**
-- Commit: `.claude/`, `CLAUDE.md`, `.github/workflows/`, all docs
+- Commit: `.claude/`, `CLAUDE.md`, `skills.json`, `.github/workflows/`, all docs
 - Gitignore: `.claude/worktrees/`, `.claude/settings.local.json`
 - Team preference: `docs/memory-backup/` (personal decision history) and `docs/features.json` (derived)
+
+## External Skills
+
+Skills are pulled from upstream repos and tracked in `skills.json`:
+
+| Skill | Source | Type |
+|-------|--------|------|
+| uncodixify-rules | [cyxzdev/Uncodixfy](https://github.com/cyxzdev/Uncodixfy) | File sync |
+| frontend-design | [anthropics/claude-code](https://github.com/anthropics/claude-code/tree/main/plugins/frontend-design) | File sync / Plugin |
+| obsidian-memory | [kepano/obsidian-skills](https://github.com/kepano/obsidian-skills) | File sync |
+| claude-mem | [thedotmack/claude-mem](https://github.com/thedotmack/claude-mem) | File sync |
+| optio-workflow | [jonwiggins/optio](https://github.com/jonwiggins/optio) | File sync |
+| entrepreneur | [slavingia/skills](https://github.com/slavingia/skills) | File sync |
+| PM + Engineering skills | [alirezarezvani/claude-skills](https://github.com/alirezarezvani/claude-skills) | Plugin |
+| Code review, feature-dev, PR review, security, hookify | [anthropics/claude-code](https://github.com/anthropics/claude-code) | Plugin |
+
+### Update file-synced skills
+
+```bash
+bash scripts/update-external-skills.sh
+```
+
+### Install plugin-based skills
+
+```bash
+bash scripts/install-plugins.sh
+```
+
+Then paste the output into your Claude Code session.
+
+### Add a new external skill
+
+Edit `skills.json` and add an entry:
+
+```json
+{
+  "my-new-skill": {
+    "source": "https://raw.githubusercontent.com/owner/repo/main/SKILL.md",
+    "repo": "https://github.com/owner/repo",
+    "description": "What it does",
+    "type": "single-file",
+    "lastSync": ""
+  }
+}
+```
+
+Then run `bash scripts/update-external-skills.sh`.
+
+---
 
 ## License
 

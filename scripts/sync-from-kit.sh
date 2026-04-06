@@ -8,7 +8,7 @@
 #   .claude/commands/{handoff,sync-status,cleanup,audit,review}.md
 #   .claude/skills/*.md
 #   .claude/settings.json (merged, not overwritten)
-#   scripts/backup-memory.sh, export-features-db.sh
+#   scripts/ (all kit-managed scripts)
 #   docs/how-claude-code-works.md
 #   docs/module-spec-template.md
 #
@@ -65,20 +65,24 @@ for cmd in handoff sync-status cleanup audit review; do
   fi
 done
 
-# Sync skills
-mkdir -p "$TARGET/.claude/skills"
-for f in "$KIT_ROOT/.claude/skills/"*.md; do
-  name=$(basename "$f")
-  dst="$TARGET/.claude/skills/$name"
-  if [ ! -f "$dst" ] || ! cmp -s "$f" "$dst"; then
-    cp "$f" "$dst"
-    echo "  updated: .claude/skills/$name"
-    UPDATED=$((UPDATED+1))
+# Sync skills (folder structure)
+for skill_dir in "$KIT_ROOT/.claude/skills"/*/; do
+  skill_name=$(basename "$skill_dir")
+  mkdir -p "$TARGET/.claude/skills/$skill_name"
+  # Only sync SKILL.md (gotchas.md is user-maintained)
+  src="$skill_dir/SKILL.md"
+  dst="$TARGET/.claude/skills/$skill_name/SKILL.md"
+  if [ -f "$src" ]; then
+    if [ ! -f "$dst" ] || ! cmp -s "$src" "$dst"; then
+      cp "$src" "$dst"
+      echo "  updated: .claude/skills/$skill_name/SKILL.md"
+      UPDATED=$((UPDATED+1))
+    fi
   fi
 done
 
-# Sync scripts (except init-claude-system and sync itself)
-for script in backup-memory.sh export-features-db.sh; do
+# Sync scripts (except init-claude-system, init-from-github, sync-from-kit, sync-from-github — those are kit-only)
+for script in backup-memory.sh restore-memory.sh sync-features-from-issues.sh push-to-issues.sh refresh-docs.sh doctor.sh uninstall.sh update-external-skills.sh install-plugins.sh lint-refs.sh; do
   src="$KIT_ROOT/scripts/$script"
   dst="$TARGET/scripts/$script"
   if [ -f "$src" ]; then

@@ -24,14 +24,14 @@ jobs:
           model: claude-sonnet-4-6
           review_comment_prefix: "🔍"
           direct_prompt: |
+            Read CLAUDE.md for project context, tech stack, and design system rules.
+
             Review this PR for:
             1. Security issues (OWASP top 10, injection, auth bypass)
-            2. Design system violations (Zinc palette, max 8px radius, 150ms transitions, no emojis as icons)
+            2. Design system violations (per CLAUDE.md rules)
             3. Missing error handling or loading states
             4. Type safety (no `any` unless necessary)
             5. Accessibility (aria-labels, keyboard navigation)
             6. Performance (unnecessary re-renders, missing memoization)
-
-            This is a Media Asset Management system. See CLAUDE.md for full context.
 
             Be concise. Only flag real issues, not style preferences.

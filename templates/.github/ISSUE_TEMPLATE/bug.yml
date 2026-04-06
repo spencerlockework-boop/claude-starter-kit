@@ -6,11 +6,11 @@ body:
     id: area
     attributes:
       label: Area
+      # <!-- TEMPLATE: customize areas for your project -->
       options:
         - frontend
         - backend
         - infra
-        - workers
         - database
     validations:
       required: true

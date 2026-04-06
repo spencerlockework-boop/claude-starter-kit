@@ -7,7 +7,7 @@
 #   .claude/          (agents, commands, settings, hooks)
 #   docs/             (FEATURES.md, how-claude-code-works.md, module-spec-template.md)
 #   CLAUDE.md         (only if missing)
-#   scripts/          (backup-memory.sh, export-features-db.sh)
+#   scripts/          (backup-memory.sh, sync-features-from-issues.sh, refresh-docs.sh, etc.)
 
 set -e
 
@@ -55,6 +55,20 @@ fi
 
 echo "Note: project-specific commands installed as templates — customize paths for your stack."
 
+# 3b. Copy skills (folder structure)
+if [ -d "$SOURCE_REPO/.claude/skills" ]; then
+  for skill_dir in "$SOURCE_REPO/.claude/skills"/*/; do
+    skill_name=$(basename "$skill_dir")
+    mkdir -p ".claude/skills/$skill_name/examples"
+    [ -f "$skill_dir/SKILL.md" ] && cp "$skill_dir/SKILL.md" ".claude/skills/$skill_name/"
+    [ -f "$skill_dir/gotchas.md" ] && [ ! -f ".claude/skills/$skill_name/gotchas.md" ] && cp "$skill_dir/gotchas.md" ".claude/skills/$skill_name/"
+    touch ".claude/skills/$skill_name/examples/.gitkeep"
+  done
+fi
+
+# 3c. Copy skills.json manifest if missing
+[ ! -f skills.json ] && [ -f "$SOURCE_REPO/skills.json" ] && cp "$SOURCE_REPO/skills.json" skills.json
+
 # 4. Copy settings.json (deny rules + formatting hook)
 if [ ! -f .claude/settings.json ]; then
   cp "$SOURCE_REPO/.claude/settings.json" .claude/settings.json
@@ -67,8 +81,9 @@ mkdir -p docs
 
 # 6. Copy scripts
 mkdir -p scripts
-cp "$SOURCE_REPO/scripts/backup-memory.sh" scripts/ 2>/dev/null || true
-cp "$SOURCE_REPO/scripts/export-features-db.sh" scripts/ 2>/dev/null || true
+for script in backup-memory.sh restore-memory.sh sync-features-from-issues.sh push-to-issues.sh refresh-docs.sh doctor.sh uninstall.sh update-external-skills.sh install-plugins.sh lint-refs.sh; do
+  [ -f "$SOURCE_REPO/scripts/$script" ] && cp "$SOURCE_REPO/scripts/$script" "scripts/$script"
+done
 chmod +x scripts/*.sh 2>/dev/null || true
 
 # 6b. Copy .github templates (workflows, issue templates) if they don't exist
@@ -130,11 +145,13 @@ if ! grep -q "CLAUDE_CODE_SUBAGENT_MODEL" "$HOME/.zshrc" 2>/dev/null; then
   echo ""
 fi
 
-echo "✓ Installed .claude/agents ($(ls .claude/agents/ | wc -l | tr -d ' ') agents)"
-echo "✓ Installed .claude/commands ($(ls .claude/commands/ | wc -l | tr -d ' ') commands)"
+echo "✓ Installed .claude/agents ($(ls .claude/agents/*.md 2>/dev/null | wc -l | tr -d ' ') agents)"
+echo "✓ Installed .claude/commands ($(ls .claude/commands/*.md 2>/dev/null | wc -l | tr -d ' ') commands)"
+echo "✓ Installed .claude/skills ($(ls -d .claude/skills/*/ 2>/dev/null | wc -l | tr -d ' ') skills)"
 echo "✓ Installed .claude/settings.json (deny rules + format hook)"
 echo "✓ Installed docs/ (FEATURES.md, how-claude-code-works.md, module-spec-template.md)"
-echo "✓ Installed scripts/ (backup-memory.sh, export-features-db.sh)"
+echo "✓ Installed scripts/ ($(ls scripts/*.sh 2>/dev/null | wc -l | tr -d ' ') scripts)"
+[ -f skills.json ] && echo "✓ Installed skills.json (external skill manifest)"
 echo ""
 echo "NEXT STEPS:"
 echo "  1. Edit CLAUDE.md with your project's stack and architecture"

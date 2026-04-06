@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "_readme": "External skill sources. Run 'bash scripts/update-external-skills.sh' to sync file-based skills. Plugin-based skills are installed manually inside Claude Code.",
+
+  "uncodixify-rules": {
+    "source": "https://raw.githubusercontent.com/cyxzdev/Uncodixfy/main/SKILL.md",
+    "repo": "https://github.com/cyxzdev/Uncodixfy",
+    "description": "Anti-AI-aesthetic UI rules. Makes UI look human-designed like Linear/Stripe/GitHub.",
+    "type": "single-file",
+    "lastSync": ""
+  },
+
+  "frontend-design": {
+    "source": "https://raw.githubusercontent.com/anthropics/claude-code/main/plugins/frontend-design/skills/frontend-design/SKILL.md",
+    "repo": "https://github.com/anthropics/claude-code/tree/main/plugins/frontend-design",
+    "description": "Anthropic official frontend design skill.",
+    "type": "single-file",
+    "installAlt": "/plugin install frontend-design@anthropics/claude-code",
+    "lastSync": ""
+  },
+
+  "obsidian-memory": {
+    "source": "https://raw.githubusercontent.com/kepano/obsidian-skills/main/SKILL.md",
+    "repo": "https://github.com/kepano/obsidian-skills",
+    "description": "Obsidian-based memory and knowledge management skill.",
+    "type": "single-file",
+    "lastSync": ""
+  },
+
+  "claude-mem": {
+    "source": "https://raw.githubusercontent.com/thedotmack/claude-mem/main/SKILL.md",
+    "repo": "https://github.com/thedotmack/claude-mem",
+    "description": "Preserves context across sessions via structured memory files.",
+    "type": "single-file",
+    "lastSync": ""
+  },
+
+  "optio-workflow": {
+    "source": "https://raw.githubusercontent.com/jonwiggins/optio/main/SKILL.md",
+    "repo": "https://github.com/jonwiggins/optio",
+    "description": "Workflow orchestration and git backend management.",
+    "type": "single-file",
+    "lastSync": ""
+  },
+
+  "entrepreneur": {
+    "source": "https://raw.githubusercontent.com/slavingia/skills/main/SKILL.md",
+    "repo": "https://github.com/slavingia/skills",
+    "description": "Entrepreneur/founder skills by Sahil Lavingia (Gumroad).",
+    "type": "single-file",
+    "lastSync": ""
+  },
+
+  "plugins": {
+    "alirezarezvani-pm": {
+      "install": "/plugin marketplace add alirezarezvani/claude-skills && /plugin install pm-skills@claude-code-skills",
+      "repo": "https://github.com/alirezarezvani/claude-skills",
+      "description": "Project management skills (6 skills including project-manager, scrum-master, etc.)"
+    },
+    "alirezarezvani-engineering": {
+      "install": "/plugin marketplace add alirezarezvani/claude-skills && /plugin install engineering-skills@claude-code-skills",
+      "repo": "https://github.com/alirezarezvani/claude-skills",
+      "description": "Core engineering skills (24 skills including architect, frontend, backend, QA, DevOps)"
+    },
+    "anthropic-code-review": {
+      "install": "/plugin install code-review@anthropics/claude-code",
+      "repo": "https://github.com/anthropics/claude-code/tree/main/plugins/code-review",
+      "description": "Anthropic official code review plugin"
+    },
+    "anthropic-feature-dev": {
+      "install": "/plugin install feature-dev@anthropics/claude-code",
+      "repo": "https://github.com/anthropics/claude-code/tree/main/plugins/feature-dev",
+      "description": "Anthropic official feature development plugin"
+    },
+    "anthropic-pr-review": {
+      "install": "/plugin install pr-review-toolkit@anthropics/claude-code",
+      "repo": "https://github.com/anthropics/claude-code/tree/main/plugins/pr-review-toolkit",
+      "description": "Anthropic official PR review toolkit"
+    },
+    "anthropic-security": {
+      "install": "/plugin install security-guidance@anthropics/claude-code",
+      "repo": "https://github.com/anthropics/claude-code/tree/main/plugins/security-guidance",
+      "description": "Anthropic official security guidance plugin"
+    },
+    "anthropic-plugin-dev": {
+      "install": "/plugin install plugin-dev@anthropics/claude-code",
+      "repo": "https://github.com/anthropics/claude-code/tree/main/plugins/plugin-dev",
+      "description": "Anthropic official plugin development plugin"
+    },
+    "anthropic-hookify": {
+      "install": "/plugin install hookify@anthropics/claude-code",
+      "repo": "https://github.com/anthropics/claude-code/tree/main/plugins/hookify",
+      "description": "Anthropic official hooks creation plugin"
+    },
+    "anthropic-ralph-wiggum": {
+      "install": "/plugin install ralph-wiggum@anthropics/claude-code",
+      "repo": "https://github.com/anthropics/claude-code/tree/main/plugins/ralph-wiggum",
+      "description": "Autonomous loop agent plugin"
+    }
+  }
+}

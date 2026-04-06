@@ -1,7 +1,4 @@
 {
-  "agents": {
-    "directory": ".claude/agents"
-  },
   "permissions": {
     "deny": [
       "Bash(rm -rf *)",

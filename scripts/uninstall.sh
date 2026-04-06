@@ -14,14 +14,15 @@ echo "Will remove:"
 echo "  .claude/agents/{frontend-builder,backend-builder,code-reviewer,architect}.md"
 echo "  .claude/commands/{handoff,sync-status,cleanup,audit,review}.md"
 echo "  .claude/skills/ (entire directory)"
-echo "  scripts/{backup-memory,export-features-db}.sh"
+echo "  scripts/{backup-memory,restore-memory,sync-features-from-issues,push-to-issues,refresh-docs,doctor,uninstall,update-external-skills,install-plugins,lint-refs}.sh"
+echo "  skills.json"
 echo "  docs/how-claude-code-works.md"
 echo "  docs/module-spec-template.md"
 echo ""
 echo "Will NOT touch:"
 echo "  CLAUDE.md"
 echo "  .claude/settings.json"
-echo "  .claude/commands/{new-session,plan-feature,spec,pickup,implement}.md"
+echo "  .claude/commands/{new-session,plan-feature,spec,pickup,regen-arch}.md"
 echo "  Any other project files"
 echo ""
 read -p "Continue? [y/N] " -n 1 -r
@@ -48,7 +49,16 @@ rm -rf .claude/skills
 
 # Scripts
 rm -f scripts/backup-memory.sh
-rm -f scripts/export-features-db.sh
+rm -f scripts/restore-memory.sh
+rm -f scripts/sync-features-from-issues.sh
+rm -f scripts/push-to-issues.sh
+rm -f scripts/refresh-docs.sh
+rm -f scripts/doctor.sh
+rm -f scripts/uninstall.sh
+rm -f scripts/update-external-skills.sh
+rm -f scripts/install-plugins.sh
+rm -f scripts/lint-refs.sh
+rm -f skills.json
 
 # Docs
 rm -f docs/how-claude-code-works.md
