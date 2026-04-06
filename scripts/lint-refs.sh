@@ -29,12 +29,15 @@ for ref_file in scripts/init-claude-system.sh scripts/sync-from-kit.sh scripts/u
   done
 done
 
-# 2. Commands referenced in uninstall must exist (or be in templates)
-grep -oE '[a-z_-]+\.md' scripts/uninstall.sh 2>/dev/null | sort -u | while read -r cmd; do
-  if [ ! -f ".claude/commands/$cmd" ] && [ ! -f ".claude/agents/$cmd" ] && [ ! -f "templates/commands/$cmd" ]; then
-    echo "  WARN: uninstall.sh references $cmd — not found in commands/agents/templates"
-  fi
-done
+# 2. Commands referenced in uninstall must exist (or be in templates or docs)
+if [ -f scripts/uninstall.sh ]; then
+  grep -oE '[a-z_-]+\.md' scripts/uninstall.sh 2>/dev/null | sort -u | while read -r cmd; do
+    if [ ! -f ".claude/commands/$cmd" ] && [ ! -f ".claude/agents/$cmd" ] && \
+       [ ! -f "templates/commands/$cmd" ] && [ ! -f "docs/$cmd" ]; then
+      echo "  WARN: uninstall.sh references $cmd — not found in commands/agents/templates/docs"
+    fi
+  done
+fi
 
 # 3. Check README script table references
 grep -oE 'scripts/[a-z_-]+\.sh' README.md 2>/dev/null | sort -u | while read -r script_path; do
@@ -44,17 +47,19 @@ grep -oE 'scripts/[a-z_-]+\.sh' README.md 2>/dev/null | sort -u | while read -r 
   fi
 done
 
-# 4. Check for orphan scripts (exist but not mentioned in init or sync)
-for script in scripts/*.sh; do
-  name=$(basename "$script")
-  case "$name" in
-    init-claude-system.sh|init-from-github.sh|sync-from-kit.sh|sync-from-github.sh|lint-refs.sh) continue ;;
-  esac
-  if ! grep -q "$name" scripts/init-claude-system.sh 2>/dev/null && \
-     ! grep -q "$name" scripts/sync-from-kit.sh 2>/dev/null; then
-    echo "  WARN: scripts/$name exists but isn't in init or sync — won't be installed"
-  fi
-done
+# 4. Check for orphan scripts (only in the kit repo where init/sync exist)
+if [ -f scripts/init-claude-system.sh ] || [ -f scripts/sync-from-kit.sh ]; then
+  for script in scripts/*.sh; do
+    name=$(basename "$script")
+    case "$name" in
+      init-claude-system.sh|init-from-github.sh|sync-from-kit.sh|sync-from-github.sh|lint-refs.sh) continue ;;
+    esac
+    if ! grep -q "$name" scripts/init-claude-system.sh 2>/dev/null && \
+       ! grep -q "$name" scripts/sync-from-kit.sh 2>/dev/null; then
+      echo "  WARN: scripts/$name exists but isn't in init or sync — won't be installed"
+    fi
+  done
+fi
 
 echo ""
 if [ "$ERRORS" = "0" ]; then
