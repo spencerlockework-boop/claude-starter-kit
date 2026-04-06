@@ -16,8 +16,10 @@ echo "  .claude/commands/{handoff,sync-status,cleanup,audit,review}.md"
 echo "  .claude/skills/ (entire directory)"
 echo "  scripts/{backup-memory,restore-memory,sync-features-from-issues,push-to-issues,refresh-docs,doctor,uninstall,update-external-skills,install-plugins,lint-refs}.sh"
 echo "  skills.json"
-echo "  docs/how-claude-code-works.md"
-echo "  docs/module-spec-template.md"
+echo "  docs/{how-claude-code-works,module-spec-template}.md"
+echo "  docs/FEATURES.md (if kit-generated)"
+echo "  .github/workflows/{claude-review,nightly-cleanup}.yml"
+echo "  .github/ISSUE_TEMPLATE/{feature,bug}.yml"
 echo ""
 echo "Will NOT touch:"
 echo "  CLAUDE.md"
@@ -63,10 +65,20 @@ rm -f skills.json
 # Docs
 rm -f docs/how-claude-code-works.md
 rm -f docs/module-spec-template.md
+rm -f docs/FEATURES.md
+
+# GitHub templates (installed by init)
+rm -f .github/workflows/claude-review.yml
+rm -f .github/workflows/nightly-cleanup.yml
+rm -f .github/ISSUE_TEMPLATE/feature.yml
+rm -f .github/ISSUE_TEMPLATE/bug.yml
 
 # Clean empty dirs
 rmdir .claude/agents 2>/dev/null || true
 rmdir .claude/commands 2>/dev/null || true
+rmdir .github/workflows 2>/dev/null || true
+rmdir .github/ISSUE_TEMPLATE 2>/dev/null || true
+rmdir .github 2>/dev/null || true
 rmdir scripts 2>/dev/null || true
 
 echo "✓ Uninstalled. Your project files are untouched."

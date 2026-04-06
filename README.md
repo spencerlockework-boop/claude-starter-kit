@@ -38,6 +38,14 @@ bash /path/to/claude-starter-kit/scripts/sync-from-kit.sh
 
 Sync updates universal files only (agents, universal commands, skills, settings, scripts, docs). Never touches your project-specific files (CLAUDE.md, custom commands).
 
+**Forked the kit?** Override the default GitHub URL:
+
+```bash
+export CLAUDE_KIT_REPO=https://github.com/your-org/claude-starter-kit.git
+```
+
+Both `init-from-github.sh` and `sync-from-github.sh` respect this env var.
+
 ---
 
 ## What's in here
@@ -93,7 +101,7 @@ When you run `init-claude-system.sh`, it copies all universal files into your re
 | `/review` | Review recent changes via subagents | Before committing |
 | `/cleanup` | Find duplicates, dead files, stubs, bloat | Weekly maintenance |
 | `/handoff` | Save dated session state to memory | When context is ~70% full |
-| `/pickup [issue#]` | Read GitHub issues, pick next task | Start of new session |
+| `/pickup [issue#]` | Read GitHub issues, pick next task *(optional — create yourself)* | Start of new session |
 | `/codex:review` | Delegate review to OpenAI Codex (if plugin installed) | Instead of `/review` to save tokens |
 
 ---
@@ -162,7 +170,7 @@ find . -name ".DS_Store" -not -path "./node_modules/*" -delete
 | API route, DB schema, query hook | `backend-builder` (Sonnet) |
 | Architecture decision | `architect` (Opus) |
 | Code review | `/codex:review` > `code-reviewer` (Sonnet) |
-| Explore codebase / find files | `Explore` subagent |
+| Explore codebase / find files | `Explore` subagent (built-in, not a kit file) |
 | Parallel audits | `/audit` launches N Sonnet subagents |
 | Cross-module refactor | Main session (Opus) |
 
@@ -248,7 +256,7 @@ Uses Claude tokens:
 | Regenerate architecture review | `/regen-arch` |
 | Refresh docs (script + FEATURES.md update) | `/refresh-docs` |
 | Push tasks as GitHub Issues | `/push-issues` |
-| Next GitHub issue | `/pickup` |
+| Next GitHub issue | `/pickup` *(optional — create yourself)* |
 | Quick status | `/sync-status` |
 
 ## External (no Claude tokens)
@@ -377,12 +385,13 @@ Skills are pulled from upstream repos and tracked in `skills.json`:
 
 | Skill | Source | Type |
 |-------|--------|------|
+| ui-ux-design | Local (ships with kit) | Local |
+| project-manager-readme | Local (ships with kit) | Local |
 | uncodixify-rules | [cyxzdev/Uncodixfy](https://github.com/cyxzdev/Uncodixfy) | File sync |
 | frontend-design | [anthropics/claude-code](https://github.com/anthropics/claude-code/tree/main/plugins/frontend-design) | File sync / Plugin |
-| obsidian-memory | [kepano/obsidian-skills](https://github.com/kepano/obsidian-skills) | File sync |
-| claude-mem | [thedotmack/claude-mem](https://github.com/thedotmack/claude-mem) | File sync |
-| optio-workflow | [jonwiggins/optio](https://github.com/jonwiggins/optio) | File sync |
-| entrepreneur | [slavingia/skills](https://github.com/slavingia/skills) | File sync |
+| obsidian-markdown | [kepano/obsidian-skills](https://github.com/kepano/obsidian-skills) | File sync |
+| claude-mem-do | [thedotmack/claude-mem](https://github.com/thedotmack/claude-mem) | File sync |
+| entrepreneur-mvp | [slavingia/skills](https://github.com/slavingia/skills) | File sync |
 | PM + Engineering skills | [alirezarezvani/claude-skills](https://github.com/alirezarezvani/claude-skills) | Plugin |
 | Code review, feature-dev, PR review, security, hookify | [anthropics/claude-code](https://github.com/anthropics/claude-code) | Plugin |
 

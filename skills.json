@@ -1,56 +1,50 @@
 {
   "schema_version": 1,
-  "_readme": "External skill sources. Run 'bash scripts/update-external-skills.sh' to sync file-based skills. Plugin-based skills are installed manually inside Claude Code.",
-
+  "_readme": "Skill manifest. 'local' skills ship with the kit. 'single-file' skills are synced from upstream via update-external-skills.sh. 'plugins' are installed manually inside Claude Code.",
+  "ui-ux-design": {
+    "description": "UI/UX design intelligence — 50+ styles, 161 palettes, 57 font pairings, 161 product types.",
+    "type": "local"
+  },
+  "project-manager-readme": {
+    "description": "Claude Code skills and plugins reference — agent skills for every coding tool.",
+    "type": "local"
+  },
   "uncodixify-rules": {
     "source": "https://raw.githubusercontent.com/cyxzdev/Uncodixfy/main/SKILL.md",
     "repo": "https://github.com/cyxzdev/Uncodixfy",
     "description": "Anti-AI-aesthetic UI rules. Makes UI look human-designed like Linear/Stripe/GitHub.",
     "type": "single-file",
-    "lastSync": ""
+    "lastSync": "2026-04-05"
   },
-
   "frontend-design": {
     "source": "https://raw.githubusercontent.com/anthropics/claude-code/main/plugins/frontend-design/skills/frontend-design/SKILL.md",
     "repo": "https://github.com/anthropics/claude-code/tree/main/plugins/frontend-design",
     "description": "Anthropic official frontend design skill.",
     "type": "single-file",
     "installAlt": "/plugin install frontend-design@anthropics/claude-code",
-    "lastSync": ""
+    "lastSync": "2026-04-05"
   },
-
-  "obsidian-memory": {
-    "source": "https://raw.githubusercontent.com/kepano/obsidian-skills/main/SKILL.md",
+  "obsidian-markdown": {
+    "source": "https://raw.githubusercontent.com/kepano/obsidian-skills/main/skills/obsidian-markdown/SKILL.md",
     "repo": "https://github.com/kepano/obsidian-skills",
-    "description": "Obsidian-based memory and knowledge management skill.",
+    "description": "Obsidian markdown syntax, callouts, embeds, and properties.",
     "type": "single-file",
-    "lastSync": ""
+    "lastSync": "2026-04-05"
   },
-
-  "claude-mem": {
-    "source": "https://raw.githubusercontent.com/thedotmack/claude-mem/main/SKILL.md",
+  "claude-mem-do": {
+    "source": "https://raw.githubusercontent.com/thedotmack/claude-mem/main/plugin/skills/do/SKILL.md",
     "repo": "https://github.com/thedotmack/claude-mem",
-    "description": "Preserves context across sessions via structured memory files.",
+    "description": "Claude-mem task execution — preserves context across sessions.",
     "type": "single-file",
-    "lastSync": ""
+    "lastSync": "2026-04-05"
   },
-
-  "optio-workflow": {
-    "source": "https://raw.githubusercontent.com/jonwiggins/optio/main/SKILL.md",
-    "repo": "https://github.com/jonwiggins/optio",
-    "description": "Workflow orchestration and git backend management.",
-    "type": "single-file",
-    "lastSync": ""
-  },
-
-  "entrepreneur": {
-    "source": "https://raw.githubusercontent.com/slavingia/skills/main/SKILL.md",
+  "entrepreneur-mvp": {
+    "source": "https://raw.githubusercontent.com/slavingia/skills/main/skills/mvp/SKILL.md",
     "repo": "https://github.com/slavingia/skills",
-    "description": "Entrepreneur/founder skills by Sahil Lavingia (Gumroad).",
+    "description": "MVP planning by Sahil Lavingia (Gumroad) — validate ideas fast.",
     "type": "single-file",
-    "lastSync": ""
+    "lastSync": "2026-04-05"
   },
-
   "plugins": {
     "alirezarezvani-pm": {
       "install": "/plugin marketplace add alirezarezvani/claude-skills && /plugin install pm-skills@claude-code-skills",
