@@ -102,7 +102,7 @@ tools: [Read, Write, Edit, Glob, Grep, Bash]
 Instructions for what this agent knows and does...
 ```
 
-You have 4 defined:
+The starter kit ships with these:
 - `frontend-builder` (Sonnet) — UI components
 - `backend-builder` (Sonnet) — API routes, DB schema
 - `code-reviewer` (Sonnet) — reviews, no write access
@@ -212,7 +212,7 @@ This tells me exactly what to build, where it goes, and what already exists. I c
 | **Sonnet** | Routine code, single-file components, tests, migrations, simple features | $ | Fast |
 | **Haiku** | Quick questions, formatting, simple edits | ¢ | Fastest |
 
-You're running Opus as your main session. Sonnet subagents handle the bulk work. This is the right setup.
+The recommended setup: Opus as your main session, Sonnet for subagents. This balances capability with cost.
 
 ---
 

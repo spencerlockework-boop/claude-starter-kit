@@ -5,10 +5,6 @@
     "description": "UI/UX design intelligence — 50+ styles, 161 palettes, 57 font pairings, 161 product types.",
     "type": "local"
   },
-  "project-manager-readme": {
-    "description": "Claude Code skills and plugins reference — agent skills for every coding tool.",
-    "type": "local"
-  },
   "uncodixify-rules": {
     "source": "https://raw.githubusercontent.com/cyxzdev/Uncodixfy/main/SKILL.md",
     "repo": "https://github.com/cyxzdev/Uncodixfy",

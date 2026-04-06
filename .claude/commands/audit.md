@@ -33,4 +33,4 @@ Wait for all subagents to complete, then synthesize into a single report:
 ### Low (nice to have)
 ```
 
-Keep the synthesized report under 30 lines. Save to `docs/audit-report.md` (overwrite if exists).
+Keep the synthesized report under 30 lines. Create `docs/` directory if needed, then save to `docs/audit-report.md` (overwrite if exists).

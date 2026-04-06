@@ -9,5 +9,3 @@ Steps:
    - **architect** (only if schema or module boundaries changed) — architecture review
 3. Consolidate findings into a single report
 4. Group by severity and file
-
-If Codex plugin is installed, suggest using `/codex:review` instead to save Claude tokens.

@@ -6,7 +6,6 @@ tools:
   - Read
   - Glob
   - Grep
-  - Bash
   - WebFetch
   - WebSearch
 ---
@@ -38,7 +37,10 @@ When asked to design something new:
 4. Propose the design with diagrams in text form (Mermaid)
 5. Note what you're explicitly NOT designing (scope boundaries)
 
+## Output
+- All output goes to the conversation (you have no Write/Edit tools)
+- The main session or a builder agent will create files based on your designs
+
 ## Never
-- Write implementation code (delegate to frontend-builder/backend-builder)
 - Make decisions without reading CLAUDE.md first
 - Introduce new external services without explicit approval
