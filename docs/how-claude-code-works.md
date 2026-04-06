@@ -153,7 +153,7 @@ Claude: reads 15 files, builds 3 things, context fills up,
 
 ### Good (context-preserving)
 ```
-You: "Build the vendor group filter for the asset table"
+You: "Build the search filter component for the users table"
 Claude: delegates file exploration to Explore subagent (isolated),
         gets summary back, builds the one feature, done.
 You: /clear
@@ -163,9 +163,9 @@ Claude: fresh context, reads only what's needed, builds it clean.
 
 ### Best (parallel)
 ```
-Terminal 1: claude --worktree vendor-filter
+Terminal 1: claude --worktree search-filter
 Terminal 2: claude --worktree notifications
-Terminal 3: claude --worktree temporal-setup
+Terminal 3: claude --worktree auth-setup
 # Three features built simultaneously, zero context collision
 ```
 

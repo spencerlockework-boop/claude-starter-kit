@@ -10,7 +10,7 @@ Copy this for each module. Fill in what you know. Leave blank what you don't. I'
 One sentence. What does this module do for the user?
 
 ### Who uses it?
-(e.g., editor, producer, archivist, external vendor, everyone)
+(e.g., admin, member, guest, API consumer, everyone)
 
 ### The user story
 Walk me through it like you're showing someone the screen:
@@ -24,7 +24,7 @@ Walk me through it like you're showing someone the screen:
 
 ### What does it look like?
 Pick the closest:
-- [ ] Spreadsheet/table (like the asset tracker)
+- [ ] Spreadsheet/table (data grid with filters)
 - [ ] Form / wizard (step-by-step input)
 - [ ] Canvas / timeline (drag things around)
 - [ ] Dashboard / cards (visual overview)
