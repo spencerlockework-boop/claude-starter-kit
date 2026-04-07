@@ -2,39 +2,40 @@
 
 ```
 +----------------------------------------------+
-|   CLAUDE CODE -- POST-IT                      |
+|   CLAUDE CODE STARTER KIT — POST-IT           |
 +----------------------------------------------+
-|  OPEN PROJECT                                 |
-|    cd <your-project-dir>                      |
+|  START SESSION                                |
 |    claude                   (start session)   |
 |    claude --resume          (continue last)   |
+|    /orient                  (read state)      |
 +----------------------------------------------+
-|  EVERY SESSION STARTS WITH                    |
-|    /new-session    orient (5-line status)     |
+|  FIRST TIME SETUP                             |
+|    /plan project   creates tech/arch/map docs |
 +----------------------------------------------+
 |  WORK LOOP                                    |
-|    /plan-feature <name>   break into tasks    |
+|    /plan feature <name>   break into tasks    |
 |    "build X in <file>"    just describe it    |
 |    /test                  run tests           |
-|    /sync-status           quick status check  |
+|    /review                subagent review     |
+|    "commit these changes" I'll write msg      |
 +----------------------------------------------+
-|  BEFORE COMMITTING                            |
-|    /review         subagent review            |
-|    "commit these changes"  I'll write msg     |
+|  WHEN STUCK                                   |
+|    /debug <error>  figure out what broke      |
+|    /pickup         grab next GitHub issue     |
 +----------------------------------------------+
 |  WHEN CONTEXT FILLS (70%+)                    |
-|    /handoff        save state to memory       |
+|    /handoff        save to docs/handoffs/     |
 |    /clear          wipe + keep CLAUDE.md      |
 +----------------------------------------------+
-|  CLEANUP + MAINTENANCE                        |
+|  MAINTENANCE                                  |
 |    /cleanup        find bloat, dead files     |
 |    /audit [scope]  parallel audit agents      |
+|    /sync-status    quick 10-line status       |
 +----------------------------------------------+
 |  OUTSIDE CLAUDE (saves tokens)                |
 |    bash scripts/doctor.sh                     |
 |    bash scripts/refresh-docs.sh               |
 |    bash scripts/update-external-skills.sh     |
 |    bash scripts/lint-refs.sh                  |
-|    git status / git log --oneline -5          |
 +----------------------------------------------+
 ```

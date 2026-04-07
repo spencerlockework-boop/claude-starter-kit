@@ -4,33 +4,33 @@ Run parallel audit subagents to check: $ARGUMENTS
 
 If no args, audit everything. Otherwise scope to: security, frontend, backend, db, infra, performance, accessibility, data-integrity.
 
-Run each audit in a forked subagent context so only final results appear in the main conversation. This keeps intermediate file reads out of your context window.
+Run each audit in a forked subagent context so only final results appear in the main conversation.
 
-Dispatch these audits in parallel using background subagents:
+Dispatch in parallel:
 
-1. **Security audit** — launch code-reviewer subagent (Sonnet)
+1. **Security audit** — code-reviewer subagent (Sonnet)
    - Scope: files changed since main, or all files if $ARGUMENTS specifies
    - Check: OWASP top 10, hardcoded secrets, injection, auth bypass
-   - Output: severity-rated findings with file:line references
+   - Output: severity-rated findings with file:line
 
-2. **Frontend audit** — launch frontend-builder subagent (Sonnet)
-   - Scope: frontend directories (src/components/, src/pages/, apps/web/, etc.)
-   - Check: accessibility, responsive design, performance, design system compliance
-   - Output: severity-rated findings
+2. **Frontend audit** — frontend-builder subagent (Sonnet)
+   - Scope: frontend directories
+   - Check: accessibility, responsive, performance, design system compliance
 
-3. **Backend audit** — launch backend-builder subagent (Sonnet)
-   - Scope: server directories (src/api/, apps/api/, server/, etc.)
+3. **Backend audit** — backend-builder subagent (Sonnet)
+   - Scope: server directories
    - Check: SQL injection, auth bypass, missing validation, error handling
-   - Output: severity-rated findings
 
-Wait for all subagents to complete, then synthesize into a single report:
+Synthesize into a single report:
 
 ```
-## Audit Report — [date]
+## Audit — YYYY-MM-DD
 ### Critical (must fix before merge)
 ### High (fix this sprint)
 ### Medium (fix soon)
 ### Low (nice to have)
 ```
 
-Keep the synthesized report under 30 lines. Create `docs/` directory if needed, then save to `docs/audit-report.md` (overwrite if exists).
+Keep under 30 lines. Create `docs/audits/` if needed. Save to `docs/audits/audit_YYYY-MM-DD.md`.
+
+If an audit for today already exists, overwrite it.

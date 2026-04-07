@@ -34,12 +34,17 @@
     "type": "single-file",
     "lastSync": "2026-04-05"
   },
-  "entrepreneur-mvp": {
-    "source": "https://raw.githubusercontent.com/slavingia/skills/main/skills/mvp/SKILL.md",
-    "repo": "https://github.com/slavingia/skills",
-    "description": "MVP planning by Sahil Lavingia (Gumroad) — validate ideas fast.",
+  "playwright-cli": {
+    "source": "https://raw.githubusercontent.com/microsoft/playwright-cli/main/skills/playwright-cli/SKILL.md",
+    "repo": "https://github.com/microsoft/playwright-cli",
+    "description": "Browser automation and testing via Playwright CLI. Snapshot-based interaction model.",
     "type": "single-file",
-    "lastSync": "2026-04-05"
+    "lastSync": "2026-04-07"
+  },
+  "brand-design": {
+    "description": "Brand-specific design tokens from real products (Linear, Stripe, Vercel, etc.). Cherry-picked from VoltAgent/awesome-design-md.",
+    "repo": "https://github.com/VoltAgent/awesome-design-md",
+    "type": "local"
   },
   "plugins": {
     "alirezarezvani-pm": {

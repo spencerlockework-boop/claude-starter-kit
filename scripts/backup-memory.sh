@@ -1,8 +1,10 @@
 #!/bin/bash
 # backup-memory.sh
-# Backs up Claude memory files to the repo (Git-independent backup).
+# Backs up Claude's internal memory files to the repo (Git-independent backup).
 # Memory lives at ~/.claude/projects/.../memory/ which is machine-local.
 # This script copies them into docs/memory-backup/ so they ride along in git.
+# Note: Handoffs are already git-tracked at docs/handoffs/ — this backs up
+# Claude's auto-memory files (user prefs, feedback, project notes).
 #
 # Auto-detects the memory directory from the current repo path.
 # Override with REPO_PATH or MEMORY_DIR env vars if needed.

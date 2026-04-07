@@ -5,7 +5,7 @@
 #
 # What it creates:
 #   .claude/          (agents, commands, settings, hooks)
-#   docs/             (FEATURES.md, how-claude-code-works.md, module-spec-template.md)
+#   docs/             (FEATURES.md, how-claude-code-works.md, handoffs/, audits/)
 #   CLAUDE.md         (only if missing)
 #   scripts/          (backup-memory.sh, sync-features-from-issues.sh, refresh-docs.sh, etc.)
 
@@ -38,22 +38,18 @@ mkdir -p .claude/agents .claude/commands .claude/skills
 # 2. Copy agents (universal)
 cp "$SOURCE_REPO/.claude/agents/"*.md .claude/agents/ 2>/dev/null || true
 
-# 3. Copy UNIVERSAL commands only (not project-specific)
-# Project-specific commands (new-session, plan-feature, spec, pickup) reference
-# These reference project-specific paths — users adapt them manually after install.
-for cmd in handoff sync-status cleanup audit review test; do
+# 3. Copy ALL universal commands
+for cmd in orient plan handoff sync-status cleanup audit review test pickup debug; do
   [ -f "$SOURCE_REPO/.claude/commands/$cmd.md" ] && cp "$SOURCE_REPO/.claude/commands/$cmd.md" .claude/commands/
 done
 
-# Copy project-specific command TEMPLATES (user adapts them)
+# Copy any remaining template commands (user adapts them)
 if [ -d "$SOURCE_REPO/templates/commands" ]; then
   for tmpl in "$SOURCE_REPO/templates/commands/"*.md; do
     name=$(basename "$tmpl")
     [ ! -f ".claude/commands/$name" ] && cp "$tmpl" ".claude/commands/$name"
   done
 fi
-
-echo "Note: project-specific commands installed as templates — customize paths for your stack."
 
 # 3b. Copy skills (folder structure)
 if [ -d "$SOURCE_REPO/.claude/skills" ]; then
@@ -74,10 +70,10 @@ if [ ! -f .claude/settings.json ]; then
   cp "$SOURCE_REPO/.claude/settings.json" .claude/settings.json
 fi
 
-# 5. Copy docs
-mkdir -p docs
+# 5. Copy docs and create output directories
+mkdir -p docs/handoffs docs/audits
+touch docs/handoffs/.gitkeep docs/audits/.gitkeep
 [ ! -f docs/how-claude-code-works.md ] && cp "$SOURCE_REPO/docs/how-claude-code-works.md" docs/ 2>/dev/null || true
-[ ! -f docs/module-spec-template.md ] && cp "$SOURCE_REPO/docs/module-spec-template.md" docs/ 2>/dev/null || true
 
 # 6. Copy scripts
 mkdir -p scripts
@@ -149,23 +145,14 @@ echo "✓ Installed .claude/agents ($(ls .claude/agents/*.md 2>/dev/null | wc -l
 echo "✓ Installed .claude/commands ($(ls .claude/commands/*.md 2>/dev/null | wc -l | tr -d ' ') commands)"
 echo "✓ Installed .claude/skills ($(ls -d .claude/skills/*/ 2>/dev/null | wc -l | tr -d ' ') skills)"
 echo "✓ Installed .claude/settings.json (deny rules + format hook)"
-echo "✓ Installed docs/ (FEATURES.md, how-claude-code-works.md, module-spec-template.md)"
+echo "✓ Installed docs/ (FEATURES.md, how-claude-code-works.md, handoffs/, audits/)"
 echo "✓ Installed scripts/ ($(ls scripts/*.sh 2>/dev/null | wc -l | tr -d ' ') scripts)"
 [ -f skills.json ] && echo "✓ Installed skills.json (external skill manifest)"
 echo ""
 echo "NEXT STEPS:"
-echo "  1. Edit CLAUDE.md with your project's stack and architecture"
+echo "  1. Run 'claude' and type '/orient' to start"
+echo "  2. Run '/plan project' to create docs/tech.md, docs/architecture.md, docs/map.md"
+echo "  3. Edit CLAUDE.md with your project's stack and conventions"
 echo ""
-echo "  2. Customize these project-specific commands in .claude/commands/:"
-echo "     (look for <!-- TEMPLATE --> comments and <placeholder> values)"
-echo "       - new-session.md    → update file paths to read"
-echo "       - plan-feature.md   → update directory paths for your stack"
-echo "       - spec.md           → update your map doc name"
-echo "       - regen-arch.md     → update your map doc name"
-echo ""
-echo "  3. (Optional) Create a /pickup command for your GitHub repo"
-echo ""
-echo "  4. Run 'claude' and type '/new-session' to orient"
-echo ""
-echo "  Universal commands (no customization needed):"
-echo "     /handoff /sync-status /cleanup /audit /review"
+echo "  All commands (no customization needed):"
+echo "     /orient /plan /handoff /audit /review /test /cleanup /sync-status /pickup /debug"

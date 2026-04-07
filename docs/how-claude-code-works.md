@@ -220,16 +220,31 @@ The recommended setup: Opus as your main session, Sonnet for subagents. This bal
 
 ```
 CLAUDE.md                    ← What every session reads first. Keep accurate.
+docs/tech.md                 ← Your stack (created via /plan project)
+docs/architecture.md         ← Your design (created via /plan project)
+docs/map.md                  ← Module specs + status (created via /plan project)
+docs/handoffs/               ← Session handoffs (dated, git-tracked)
+docs/audits/                 ← Audit history (dated, git-tracked)
 .claude/agents/*.md          ← Your agent team definitions
-.claude/settings.json        ← Project settings
-.claude/settings.local.json  ← Your local permissions (not committed)
+.claude/commands/*.md        ← Slash commands
+.claude/skills/*/SKILL.md    ← Skill files
+.claude/settings.json        ← Deny rules, hooks
 ~/.claude/projects/.../memory/
   ├── MEMORY.md              ← Index of all memories (loaded every session)
+  ├── handoff_*.md           ← Also written here for auto-load
   ├── reference_*.md         ← Where to find things
   ├── feedback_*.md          ← How you want to work
-  ├── project_*.md           ← Project state and decisions
   └── user_*.md              ← About you
 ```
+
+### Getting started with a new project
+
+1. Install the kit: `bash /path/to/claude-starter-kit/scripts/init-claude-system.sh`
+2. Start Claude: `claude`
+3. Run `/orient` — it will tell you project docs are missing
+4. Run `/plan project` — walks you through creating tech.md, architecture.md, map.md
+5. Edit `CLAUDE.md` with your stack and conventions
+6. You're ready to build: `/plan feature <name>`
 
 ---
 

@@ -53,8 +53,8 @@ Both `init-from-github.sh` and `sync-from-github.sh` respect this env var.
 ```
 .claude/
   agents/          Universal subagents: frontend-builder, backend-builder, code-reviewer, architect
-  commands/        Universal slash commands: handoff, sync-status, cleanup, audit, review
-  skills/          Skill folders (frontend-design, ui-ux-design, uncodixify-rules + synced external skills)
+  commands/        Universal: orient, plan, handoff, audit, review, test, cleanup, sync-status, pickup, debug
+  skills/          Skill folders (design, UI rules, testing, brand refs + synced external skills)
   settings.json    Deny rules (rm -rf, force push, .env reads) + prettier hook
 skills.json        External skill manifest (upstream sources + plugin registry)
 scripts/
@@ -74,11 +74,9 @@ scripts/
   lint-refs.sh                  Check for stale cross-file references
 docs/
   how-claude-code-works.md Mental model and token management
-  module-spec-template.md  Template for speccing new modules
+  POST-IT.md               Printable quick-reference card
 templates/
   CLAUDE.md                Starter template to customize per project
-  BOOTSTRAP.md             Fresh-machine setup guide (clone → install → run)
-  commands/                Project-specific command templates (new-session, plan-feature, spec, regen-arch)
   .gitignore               Common ignores + Claude Code specifics (worktrees, local settings)
   .github/
     workflows/             claude-review.yml (PR auto-review) + nightly-cleanup.yml (daily audit)
@@ -93,17 +91,18 @@ When you run `init-claude-system.sh`, it copies all universal files into your re
 
 | Command | What it does | When to use |
 |---------|-------------|-------------|
-| `/new-session` | Orient in a fresh session (reads CLAUDE.md + handoff, 5-line status) | First thing every new session |
-| `/plan-feature <name>` | Break feature into tasks, assign agents, identify dependencies | Before building anything non-trivial |
-| `/spec <name>` | Write a module spec into your map doc | Before implementing a new module |
-| `/sync-status` | 10-line status report (branch, commits, dirty files, next action) | Quick check-in |
-| `/audit [scope]` | Parallel forked Sonnet subagents (security, frontend, backend) — results only in main context | Before PRs, periodically |
+| `/orient` | Read project docs + handoff, show status and available tools | Start of every session |
+| `/plan project` | Create `docs/tech.md`, `docs/architecture.md`, `docs/map.md` interactively | First time setup |
+| `/plan feature <name>` | Break feature into agent-assigned tasks | Before building anything non-trivial |
+| `/plan module <name>` | Write a module spec into `docs/map.md` | Before implementing a new module |
+| `/audit [scope]` | Parallel forked subagents (security, frontend, backend) → `docs/audits/` | Before PRs, periodically |
 | `/review` | Review recent changes via subagents | Before committing |
-| `/test` | Run test suite, summarize pass/fail | After implementing, before committing |
-| `/cleanup` | Find duplicates, dead files, stubs, bloat | Weekly maintenance |
-| `/handoff` | Save dated session state to memory | When context is ~70% full |
-| `/pickup [issue#]` | Read GitHub issues, pick next task *(optional — create yourself)* | Start of new session |
-| `/codex:review` | Delegate review to OpenAI Codex (if plugin installed) | Instead of `/review` to save tokens |
+| `/test` | Run test suite, summarize pass/fail | After implementing |
+| `/cleanup` | Find dead files, stubs, stale worktrees, bloat | Weekly maintenance |
+| `/handoff` | Save session state to `docs/handoffs/` + memory dir | When context is ~70% full |
+| `/sync-status` | 10-line status report | Quick check-in |
+| `/pickup [issue#]` | Read GitHub issues, pick next task | Start of new session |
+| `/debug` | Diagnose what broke — reads errors, recent changes, suggests fix | Something is broken |
 
 ---
 
@@ -247,16 +246,17 @@ Uses Claude tokens:
 
 | Task | Command |
 |------|---------|
-| Orient fresh session | `/new-session` |
-| Plan a feature | `/plan-feature <name>` |
-| Write a module spec | `/spec <name>` |
+| Orient session | `/orient` |
+| Setup project docs | `/plan project` |
+| Plan a feature | `/plan feature <name>` |
+| Plan a module | `/plan module <name>` |
 | Audit codebase | `/audit [scope]` |
 | Review changes | `/review` |
 | Run tests | `/test` |
+| Debug an issue | `/debug <error>` |
 | Clean dead files | `/cleanup` |
 | Save session state | `/handoff` |
-| Regenerate architecture review | `/regen-arch` |
-| Next GitHub issue | `/pickup` *(optional — create yourself)* |
+| Next GitHub issue | `/pickup` |
 | Quick status | `/sync-status` |
 
 ## External (no Claude tokens)
@@ -295,27 +295,13 @@ Start a session with one of these:
 
 ---
 
-## After Install — Customize These
+## After Install
 
-When you install the kit, 4 commands get copied as **templates** — they reference project paths that differ per project. Edit them once when you first set up your repo:
+1. Run `claude` then `/orient` — it will tell you project docs are missing
+2. Run `/plan project` — creates `docs/tech.md`, `docs/architecture.md`, `docs/map.md` interactively
+3. Edit `CLAUDE.md` with your stack and conventions
 
-| File | What to customize |
-|------|-------------------|
-| `.claude/commands/new-session.md` | Path to your map doc (e.g. `docs/myapp-map.md`) |
-| `.claude/commands/plan-feature.md` | Your directory paths (e.g. `src/api/`, `src/web/`) |
-| `.claude/commands/spec.md` | Your map doc name |
-| `.claude/commands/regen-arch.md` | Your map doc name |
-
-Look for HTML comment headers (`<!-- TEMPLATE: ... -->`) and `<placeholder>` values.
-
-**Universal commands** (no customization — they work in any repo):
-- `/handoff`, `/sync-status`, `/cleanup`, `/audit`, `/review`, `/test`
-
-**Optional**: Create a `/pickup` command that hits your GitHub repo:
-```bash
-# .claude/commands/pickup.md
-Read GitHub issues from <your-org>/<your-repo>, sort by label priority, pick up the next unassigned one.
-```
+**All commands are universal** — no customization needed. They read your project docs to understand context.
 
 ---
 
@@ -334,41 +320,34 @@ This kit is developer tooling that lives **alongside** your app code, not part o
 
 **Working docs** (project-specific, created by Claude sessions):
 - `docs/architecture.md` — **stable reference**: the system as it is (4-plane model, stack, constraints). Changes rarely.
-- `docs/architecture-review.md` — **point-in-time analysis**: what's broken + PR plan to fix it. Regenerated periodically.
-- `docs/<your-project>-map.md` — module specs, status, field schemas. Updated with every module spec change.
-- `docs/audit-report.md` — audit findings (security, perf, design, etc.). Regenerate with `/audit`.
+- `docs/map.md` — module specs, status, what's built vs planned. Update with `/plan module`.
+- `docs/handoffs/` — dated session handoffs. Written by `/handoff`.
+- `docs/audits/` — dated audit reports. Written by `/audit`.
 - `docs/FEATURES.md` — mirror of GitHub Issues. Regenerate with `sync-features-from-issues.sh`.
-- `docs/features.json` — machine-readable feature snapshot. Regenerated alongside FEATURES.md.
 
 ### Document flow
 
-Docs build on each other in a chain:
-
 ```
-architecture.md  ← human-written: the blueprint
-       +
-<project>-map.md  ← human-written: module specs + status
+/plan project creates:
+  docs/tech.md          ← stack, tools, dependencies
+  docs/architecture.md  ← system design, constraints
+  docs/map.md           ← module specs + status
        ↓
-   (Claude reads both)
+  Claude reads all three + CLAUDE.md
        ↓
-architecture-review.md  ← Claude-generated: analysis + PR plan
+  /plan feature → task list → build → /audit → GitHub Issues
        ↓
-   (fix plan becomes GitHub Issues)
-       ↓
-FEATURES.md + features.json  ← mirror of GitHub Issues
+  docs/FEATURES.md  ← mirror of GitHub Issues
 ```
 
 | Doc | Source | When to update |
 |-----|--------|----------------|
-| `architecture.md` | You write it | Only when architecture actually changes |
-| `<project>-map.md` | You write it (use `/spec`) | Every time you add/change a module |
-| `architecture-review.md` | **Claude generates it** from the two above | Regenerate after audits or big refactors — in a fresh session for clean context |
-| GitHub Issues | Created from review's fix plan | Continuous — filed as work items |
-| `FEATURES.md` + `features.json` | Auto-generated from GitHub Issues | `bash scripts/sync-features-from-issues.sh` |
-
-**The rule:** upstream changes invalidate downstream docs. If you change `architecture.md` or the map, regenerate `architecture-review.md`. If the review's fix plan changes, update the issues.
-
-If you only have one architecture doc, use `architecture.md`. `architecture-review.md` is optional — only create it when you want Claude's analysis + PR plan for a big refactor.
+| `docs/tech.md` | `/plan project` or manual | When stack changes |
+| `docs/architecture.md` | `/plan project` or manual | When design changes |
+| `docs/map.md` | `/plan module` | Every time you add/change a module |
+| `docs/handoffs/` | `/handoff` | End of each session |
+| `docs/audits/` | `/audit` | Before PRs, periodically |
+| `FEATURES.md` | `bash scripts/sync-features-from-issues.sh` | After GitHub Issues change |
 
 **Work tracking:**
 - **GitHub Issues** are the source of truth for backlog/bugs/features
@@ -390,7 +369,9 @@ Skills are pulled from upstream repos and tracked in `skills.json`:
 | frontend-design | [anthropics/claude-code](https://github.com/anthropics/claude-code/tree/main/plugins/frontend-design) | File sync / Plugin |
 | obsidian-markdown | [kepano/obsidian-skills](https://github.com/kepano/obsidian-skills) | File sync |
 | claude-mem-do | [thedotmack/claude-mem](https://github.com/thedotmack/claude-mem) | File sync |
-| entrepreneur-mvp | [slavingia/skills](https://github.com/slavingia/skills) | File sync |
+| playwright-cli | [microsoft/playwright-cli](https://github.com/microsoft/playwright-cli) | File sync |
+| brand-design | [VoltAgent/awesome-design-md](https://github.com/VoltAgent/awesome-design-md) | Local (9 brands) |
+| frontend-design refs | [pbakaus/impeccable](https://github.com/pbakaus/impeccable) | Local (7 reference docs) |
 | PM + Engineering skills | [alirezarezvani/claude-skills](https://github.com/alirezarezvani/claude-skills) | Plugin |
 | Code review, feature-dev, PR review, security, hookify | [anthropics/claude-code](https://github.com/anthropics/claude-code) | Plugin |
 
