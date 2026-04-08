@@ -80,7 +80,7 @@ for skill_dir in "$KIT_ROOT/.claude/skills"/*/; do
 done
 
 # Sync scripts (except init-claude-system, init-from-github, sync-from-kit, sync-from-github — those are kit-only)
-for script in backup-memory.sh restore-memory.sh sync-features-from-issues.sh push-to-issues.sh refresh-docs.sh doctor.sh uninstall.sh update-external-skills.sh install-plugins.sh lint-refs.sh; do
+for script in backup-memory.sh restore-memory.sh sync-features-from-issues.sh push-to-issues.sh refresh-docs.sh doctor.sh uninstall.sh update-external-skills.sh install-plugins.sh lint-refs.sh install-global.sh setup-github.sh; do
   src="$KIT_ROOT/scripts/$script"
   dst="$TARGET/scripts/$script"
   if [ -f "$src" ]; then

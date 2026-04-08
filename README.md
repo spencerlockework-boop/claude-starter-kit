@@ -69,6 +69,8 @@ scripts/
   push-to-issues.sh             Bulk create GitHub Issues from TSV file
   refresh-docs.sh               Run all automated doc updates (features, memory, cleanup)
   doctor.sh                     Health-check Claude Code environment
+  install-global.sh             Install ~/.claude/ config (once per machine)
+  setup-github.sh               Create standardized GitHub labels
   update-external-skills.sh     Sync file-based skills from upstream repos
   install-plugins.sh            Print plugin install commands for Claude Code session
   lint-refs.sh                  Check for stale cross-file references
@@ -112,28 +114,41 @@ When you run `init-claude-system.sh`, it copies all universal files into your re
 alias cc="claude"                   # start interactive session
 alias ccq="claude -p"               # one-shot prompt, no session
 alias ccr="claude --resume"         # resume last session
-alias ccheat="less /path/to/claude-starter-kit/README.md"  # adjust path
 ```
 
 ---
 
 ## Scripts
 
+### Setup (run once)
+
 | Script | What it does |
 |--------|-------------|
-| `bash scripts/init-claude-system.sh [target]` | Install kit into another repo (from local clone) |
-| `bash scripts/init-from-github.sh [target]` | Install from GitHub (no local clone needed) |
-| `bash scripts/sync-from-kit.sh [target]` | Pull latest universal files into a project (from local clone) |
-| `bash scripts/sync-from-github.sh [target]` | Sync from GitHub (always gets latest main) |
-| `bash scripts/uninstall.sh [target]` | Remove kit files from a repo (keeps your project files) |
-| `bash scripts/backup-memory.sh` | Backup memory files to `docs/memory-backup/` |
-| `bash scripts/restore-memory.sh` | Restore memory from `docs/memory-backup/` (fresh machine) |
-| `bash scripts/sync-features-from-issues.sh` | Pull GitHub Issues → `docs/FEATURES.md` + `docs/features.json` |
-| `bash scripts/push-to-issues.sh <file.tsv>` | Bulk create GitHub Issues from TSV (title, body, labels, assignee) |
-| `bash scripts/refresh-docs.sh` | One-command doc refresh (features + memory + cleanup) |
-| `bash scripts/doctor.sh` | Health-check Claude Code environment |
-| `bash scripts/update-external-skills.sh` | Sync file-based skills from upstream repos |
+| `bash scripts/init-claude-system.sh [target]` | Install kit into a repo (from local clone) |
+| `bash scripts/init-from-github.sh` | Install from GitHub (no local clone needed) |
+| `bash scripts/install-global.sh` | Install `~/.claude/CLAUDE.md` + `settings.json` (once per machine) |
+| `bash scripts/setup-github.sh` | Create standardized GitHub labels matching agent routing |
+| `bash scripts/uninstall.sh [target]` | Remove kit files from a repo |
+
+### Sync (run periodically)
+
+| Script | What it does |
+|--------|-------------|
+| `bash scripts/sync-from-kit.sh [target]` | Pull latest kit files into a project (local clone) |
+| `bash scripts/sync-from-github.sh` | Sync from GitHub (always gets latest main) |
+| `bash scripts/update-external-skills.sh` | Fetch latest skills from upstream repos |
 | `bash scripts/install-plugins.sh` | Print plugin install commands for Claude Code session |
+
+### Daily use (no Claude tokens)
+
+| Script | What it does |
+|--------|-------------|
+| `bash scripts/doctor.sh` | Health-check environment |
+| `bash scripts/refresh-docs.sh` | Sync features + backup memory + clean .DS_Store |
+| `bash scripts/sync-features-from-issues.sh` | Pull GitHub Issues → `docs/FEATURES.md` |
+| `bash scripts/push-to-issues.sh <file.tsv>` | Bulk create GitHub Issues from TSV |
+| `bash scripts/backup-memory.sh` | Backup Claude memory to `docs/memory-backup/` |
+| `bash scripts/restore-memory.sh` | Restore memory (fresh machine) |
 | `bash scripts/lint-refs.sh` | Check for stale cross-file references |
 
 ---

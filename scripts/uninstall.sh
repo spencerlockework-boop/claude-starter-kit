@@ -66,6 +66,8 @@ rm -f scripts/uninstall.sh
 rm -f scripts/update-external-skills.sh
 rm -f scripts/install-plugins.sh
 rm -f scripts/lint-refs.sh
+rm -f scripts/install-global.sh
+rm -f scripts/setup-github.sh
 rm -f skills.json
 
 # Docs (kit-managed only — keeps user's project docs and handoff/audit content)

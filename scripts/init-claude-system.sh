@@ -77,7 +77,7 @@ touch docs/handoffs/.gitkeep docs/audits/.gitkeep
 
 # 6. Copy scripts
 mkdir -p scripts
-for script in backup-memory.sh restore-memory.sh sync-features-from-issues.sh push-to-issues.sh refresh-docs.sh doctor.sh uninstall.sh update-external-skills.sh install-plugins.sh lint-refs.sh; do
+for script in backup-memory.sh restore-memory.sh sync-features-from-issues.sh push-to-issues.sh refresh-docs.sh doctor.sh uninstall.sh update-external-skills.sh install-plugins.sh lint-refs.sh install-global.sh setup-github.sh; do
   [ -f "$SOURCE_REPO/scripts/$script" ] && cp "$SOURCE_REPO/scripts/$script" "scripts/$script"
 done
 chmod +x scripts/*.sh 2>/dev/null || true
