@@ -54,7 +54,7 @@ Both `init-from-github.sh` and `sync-from-github.sh` respect this env var.
 .claude/
   agents/          Universal subagents: frontend-builder, backend-builder, code-reviewer, architect
   commands/        Universal: orient, plan, handoff, audit, review, test, cleanup, sync-status, pickup, debug
-  skills/          Skill folders (design, UI rules, testing, brand refs + synced external skills)
+  skills/          Skill folders (design, UI rules, brand refs, browser automation + synced external)
   settings.json    Deny rules (rm -rf, force push, .env reads) + prettier hook
 skills.json        External skill manifest (upstream sources + plugin registry)
 scripts/

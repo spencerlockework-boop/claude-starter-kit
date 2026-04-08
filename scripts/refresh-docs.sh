@@ -1,7 +1,7 @@
 #!/bin/bash
 # refresh-docs.sh
 # Run all automated documentation updates.
-# Does NOT update docs that need Claude (project-map, architecture-review, audit-report, CLAUDE.md).
+# Does NOT update docs that need Claude (tech.md, architecture.md, map.md, CLAUDE.md).
 
 set -e
 

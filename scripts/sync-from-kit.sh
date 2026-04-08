@@ -4,18 +4,16 @@
 # Run from any target repo: bash /path/to/claude-starter-kit/scripts/sync-from-kit.sh
 #
 # What it updates (safe — only touches universal files):
-#   .claude/agents/*.md (except project-specific customizations)
-#   .claude/commands/{handoff,sync-status,cleanup,audit,review}.md
-#   .claude/skills/*.md
-#   .claude/settings.json (merged, not overwritten)
+#   .claude/agents/*.md
+#   .claude/commands/{orient,plan,handoff,sync-status,cleanup,audit,review,test,pickup,debug}.md
+#   .claude/skills/*/SKILL.md (not gotchas.md — those are yours)
 #   scripts/ (all kit-managed scripts)
 #   docs/how-claude-code-works.md
-#   docs/module-spec-template.md
 #
 # What it NEVER touches:
 #   CLAUDE.md (project-specific)
-#   .claude/commands/{new-session,plan-feature,spec,pickup}.md (project-specific)
-#   docs/CHEAT-SHEET.md (project reference)
+#   docs/tech.md, docs/architecture.md, docs/map.md (your project docs)
+#   docs/handoffs/, docs/audits/ (your session history)
 #   Any other project files
 
 set -e
@@ -97,7 +95,7 @@ for script in backup-memory.sh restore-memory.sh sync-features-from-issues.sh pu
 done
 
 # Sync universal docs
-for doc in how-claude-code-works.md module-spec-template.md; do
+for doc in how-claude-code-works.md; do
   src="$KIT_ROOT/docs/$doc"
   dst="$TARGET/docs/$doc"
   if [ -f "$src" ]; then
